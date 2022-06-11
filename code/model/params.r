@@ -1,6 +1,6 @@
 # functions for defining parameters
 
-.dimnames = list( # global variable storing dimnames
+.dn = list( # global variable storing dimnames
   city    = c('A','B'),
   risk    = c('low','high'),
   health  = c('sus','vax','exp','inf','rec')
@@ -43,7 +43,7 @@ def.params.fixed = function(P){
     dur.inf       =    21,  # 3 weeks infectious
     # TODO: vax & isolation
   NULL))
-  P$x.city.risk = array(c(1-P$x.city.high,P$x.city.high),c(2,2),.dimnames[c('city','risk')]) # proportions
+  P$x.city.risk = array(c(1-P$x.city.high,P$x.city.high),c(2,2),.dn[c('city','risk')]) # proportions
   P$X.city.risk = P$x.city.risk * P$X.city  # absolute numbers
   P$C.risk.sex  = array(c(P$C.sex.low, P$C.sex.high), dimnames=list(risk=c('low','high')))
   P$C.risk.com  = array(c(P$C.com.low, P$C.com.high), dimnames=list(risk=c('low','high')))
@@ -62,10 +62,10 @@ def.mix = function(X,C,asso.risk,asso.city){
   M = array( # initialize
     dim = c(2,2,2,2),
     dimnames = list(
-      self.city  = .dimnames$city,
-      self.risk  = .dimnames$risk,
-      other.city = .dimnames$city,
-      other.risk = .dimnames$risk
+      self.city  = .dn$city,
+      self.risk  = .dn$risk,
+      other.city = .dn$city,
+      other.risk = .dn$risk
     )
   )
   for (y in c(1,2)){ # self.city
@@ -93,5 +93,5 @@ def.X0 = function(P){
   X0.data[,,1] = X0.data[,,1] - P$X0.exp - P$X0.inf # remove initial exp & inf from sus
   X0.data[,,3] = P$X0.exp # add back initial exp
   X0.data[,,4] = P$X0.inf # add back initial inf
-  return(array(X0.data, c(2,2,5), .dimnames))
+  return(array(X0.data, c(2,2,5), .dn))
 }

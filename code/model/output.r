@@ -1,6 +1,6 @@
 library('reshape2')
 
-.get.long = function(R,t=R$t,city=.dimnames$city,risk=.dimnames$risk,health=.dimnames$health,name='X'){
+.get.long = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health=.dn$health,name='X'){
   # extract "X" (or "inc") from R, melt it, and subset it
   D = melt(R[[name]],value.name=name)
   D = D[
@@ -24,7 +24,7 @@ library('reshape2')
   return(out)
 }
 
-out.prevalence = function(R,t=R$t,city=.dimnames$city,risk=.dimnames$risk,health='inf',aggr=T){
+out.prevalence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health='inf',aggr=T){
   D = .get.long(R,t,city,risk)
   if (aggr){
     out = aggregate(X~t,D,sum) # denominator
@@ -36,7 +36,7 @@ out.prevalence = function(R,t=R$t,city=.dimnames$city,risk=.dimnames$risk,health
   return(.clean.out(out,'prevalence',aggr,city=city,risk=risk))
 }
 
-out.incidence = function(R,t=R$t,city=.dimnames$city,risk=.dimnames$risk,health=c('sus','vax'),aggr=T,rate=T){
+out.incidence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health=c('sus','vax'),aggr=T,rate=T){
   D     = .get.long(R,t,city,risk,health)
   D$inc = .get.long(R,t,city,risk,health,name='inc')$inc
   D$inf = D$X * D$inc
