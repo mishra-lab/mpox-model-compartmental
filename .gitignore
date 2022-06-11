@@ -9,6 +9,7 @@ __pycache__/
 
 # R
 .Rhistory
+Rplots.pdf
 
 # tex
 *.aux
