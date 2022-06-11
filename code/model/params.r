@@ -1,4 +1,5 @@
 # functions for defining parameters
+source('utils/stats.r')
 
 .dn = list( # global variable storing dimnames
   city    = c('A','B'),
@@ -13,14 +14,27 @@ def.t = function(t0=0,t1=120,dt=1){
 
 def.params = function(){
   # main function
-  P = def.params.fitted()
+  P = def.params.hand()
+  # P = def.params.fitted()
   P = def.params.fixed(P)
   P$X0 = def.X0(P)
   return(P)
 }
 
-def.params.fitted = function(){
-  P = list() # TBD
+def.params.fitted = function(seed=NULL){
+  set.seed(seed)
+  P = list() 
+  P$C.com.fit = f.gamma('r',m=1.50,sd=1.0,n=1)
+  P$beta.sex  = f.gamma('r',m=0.70,sd=0.2,n=1)
+  P$beta.com  = f.gamma('r',m=0.10,sd=0.1,n=1)
+  return(P)
+}
+
+def.params.hand = function(){
+  P = list()
+  P$C.com.fit = 1
+  P$beta.sex  = .70
+  P$beta.com  = .05
   return(P)
 }
 
@@ -35,10 +49,10 @@ def.params.fixed = function(P){
     asso.city     =  0.99,  # assort (epsilon) between cities:         0 = random; 1 = assortative
     C.sex.low     =  1/90,  # daily sexual partnerships among low risk
     C.sex.high    =  1/10,  # daily sexual partnerships among high risk
-    C.com.low     =     1,  # daily community "encounters" among low risk
-    C.com.high    =     1,  # daily community "encounters" among high risk
-    beta.sex      =   .90,  # transmission probability per sex partner
-    beta.com      =   .05,  # transmission probability per community encounter
+    C.com.low     = P$C.com.fit, # daily community "encounters" among low risk
+    C.com.high    = P$C.com.fit, # daily community "encounters" among high risk
+    # beta.sex      =   .90,  # transmission probability per sex partner
+    # beta.com      =   .05,  # transmission probability per community encounter
     dur.exp       =     7,  # 1 week incubation
     dur.inf       =    21,  # 3 weeks infectious
     # TODO: vax & isolation
