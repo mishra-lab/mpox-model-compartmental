@@ -12,10 +12,18 @@ def.t = function(t0=0,t1=120,dt=1){
   return(seq(t0,t1,dt))
 }
 
-def.params = function(){
-  # main function
-  P = def.params.hand()
-  # P = def.params.fitted()
+def.params.n = function(n){
+  # wrapper to create a list of parameter sets
+  return(lapply(seq(n),def.params))
+}
+
+def.params = function(seed=NULL){
+  # main function to define parameter set
+  if (is.null(seed)){
+    P = def.params.hand()
+  } else {
+    P = def.params.fitted(seed)
+  }
   P = def.params.fixed(P)
   P$X0 = def.X0(P)
   return(P)
@@ -24,6 +32,7 @@ def.params = function(){
 def.params.fitted = function(seed=NULL){
   set.seed(seed)
   P = list() 
+  P$seed = seed
   P$C.com.fit = f.gamma('r',m=1.50,sd=1.0,n=1)
   P$beta.sex  = f.gamma('r',m=0.70,sd=0.2,n=1)
   P$beta.com  = f.gamma('r',m=0.10,sd=0.1,n=1)
@@ -39,24 +48,22 @@ def.params.hand = function(){
 }
 
 def.params.fixed = function(P){
-  P = c(P,list( # append to fitted params
-    X.city        = c(A=50000,B=20000), # population size in cities A,B
-    x.city.high   = c(A=.20,B=.15), # proportion in higher risk in cities A,B
-    X0.exp        = array(c(A.low=0,B.low=0,A.high=0,B.high=0),c(2,2)), # number initially exposed
-    X0.inf        = array(c(A.low=0,B.low=0,A.high=1,B.high=0),c(2,2)), # number initially infected
-    asso.sex      =  0.00,  # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
-    asso.com      =  0.00,  # assort (epsilon) in community contacts:  0 = random; 1 = assortative
-    asso.city     =  0.99,  # assort (epsilon) between cities:         0 = random; 1 = assortative
-    C.sex.low     =  1/90,  # daily sexual partnerships among low risk
-    C.sex.high    =  1/10,  # daily sexual partnerships among high risk
-    C.com.low     = P$C.com.fit, # daily community "encounters" among low risk
-    C.com.high    = P$C.com.fit, # daily community "encounters" among high risk
-    # beta.sex      =   .90,  # transmission probability per sex partner
-    # beta.com      =   .05,  # transmission probability per community encounter
-    dur.exp       =     7,  # 1 week incubation
-    dur.inf       =    21,  # 3 weeks infectious
+  P$X.city        = c(A=50000,B=20000) # population size in cities A,B
+  P$x.city.high   = c(A=.20,B=.15) # proportion in higher risk in cities A,B
+  P$X0.exp        = array(c(A.low=0,B.low=0,A.high=0,B.high=0),c(2,2)) # number initially exposed
+  P$X0.inf        = array(c(A.low=0,B.low=0,A.high=1,B.high=0),c(2,2)) # number initially infected
+  P$asso.sex      =  0.00  # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
+  P$asso.com      =  0.00  # assort (epsilon) in community contacts:  0 = random; 1 = assortative
+  P$asso.city     =  0.99  # assort (epsilon) between cities:         0 = random; 1 = assortative
+  P$C.sex.low     =  1/90  # daily sexual partnerships among low risk
+  P$C.sex.high    =  1/10  # daily sexual partnerships among high risk
+  P$C.com.low     = P$C.com.fit # daily community "encounters" among low risk
+  P$C.com.high    = P$C.com.fit # daily community "encounters" among high risk
+  # P$beta.sex      =   .90  # transmission probability per sex partner
+  # P$beta.com      =   .05  # transmission probability per community encounter
+  P$dur.exp       =     7  # 1 week incubation
+  P$dur.inf       =    21  # 3 weeks infectious
     # TODO: vax & isolation
-  NULL))
   P$x.city.risk = array(c(1-P$x.city.high,P$x.city.high),c(2,2),.dn[c('city','risk')]) # proportions
   P$X.city.risk = P$x.city.risk * P$X.city  # absolute numbers
   P$C.risk.sex  = array(c(P$C.sex.low, P$C.sex.high), dimnames=list(risk=c('low','high')))
