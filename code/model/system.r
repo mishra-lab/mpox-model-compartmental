@@ -14,6 +14,14 @@ sys.init.X = function(X0,t){
   return(X)
 }
 
+sys.run.n = function(P.n,t,para=T){
+  if (para){
+    R.n = par.lapply(P.n,sys.run,t=t,export=c('ndim','sys.init.X','sys.dX','sys.inc'))
+  } else {
+    R.n = lapply(P.n,sys.run,t=t)
+  }
+}
+
 sys.run = function(P,t){
   # runs the model
   X   = sys.init.X(P$X0,t)           # initialize main variable (population)
