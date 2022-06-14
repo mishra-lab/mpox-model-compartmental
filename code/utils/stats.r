@@ -14,3 +14,41 @@ f.beta = function(x,m,sd,...){
   return(get(paste0(x,'beta'))(...,shape1=alpha,shape2=beta))
 }
 
+confusion.solve = function(X,AP,PP,sens=NULL,spec=NULL,ppv=NULL,npv=NULL,dn=NULL){
+  # given the total (X), actual positive (AP), predicted positive (PP),
+  # and 1 other metric of the confusion matrix (sens,spec,ppv,npv),
+  # resolve the confusion matrix & return all 4 metrics
+  AN = X - AP # actual negative
+  PN = X - PP # predicted negative
+  confusion.alloc = function(TP){ # starting from true positive ...
+    # |  X | PP : PN |
+    # |--------------|  > AP = TP + FN
+    # | AP | TP : FN |  > AN = FP + TN
+    # | AN | FP : TN |  > PP = TP + FP
+    # |--------------|  > PN = TN + FN
+    FN = AP - TP # false negative
+    FP = PP - TP # false positive
+    TN = PN - FN # true negative
+    return(list(
+      X = array(c(TP,FP,FN,TN),c(2,2),dimnames=dn),
+      sens = TP / PP,
+      spec = TN / PN,
+      ppv  = TP / (TP + FP),
+      npv  = TN / (TN + FN)
+    ))
+  }
+  obj.fun = function(TP){
+    alloc = confusion.alloc(TP)
+    j = 0
+    if (!is.null(sens)){ j = j + (sens - alloc$sens)^2 }
+    if (!is.null(spec)){ j = j + (spec - alloc$spec)^2 }
+    if (!is.null(ppv)) { j = j + (ppv  - alloc$ppv )^2 }
+    if (!is.null(npv)) { j = j + (npv  - alloc$npv )^2 }
+    return(j)
+  }
+  if (PP==0){
+    return(confusion.alloc(0))
+  } else {
+    return(confusion.alloc(optimize(obj.fun,c(0,AP))$minimum))
+  }
+}
