@@ -39,16 +39,25 @@ out.fun.n = function(R.n,name,...){
 # aggregation is across all stratifications or none; so, to aggregate across risk but not city,
 # use: rbind(out.{fun}(...,city='A'),out.{fun}(...,city='B')), etc.
 
-out.prevalence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health='inf',aggr=T){
+out.prevalence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health='inf',aggr=T,prop=T){
   # infection prevalence, but can also be used for other health states
-  # aggregation uses sum(num) / sum(den)
+  # prop aggregation uses sum(num) / sum(den)
+  # absolute aggregate uses sum(num)
   D = .get.long(R,t,city,risk)
   if (aggr){
-    out = aggregate(X~t,D,sum) # denominator
-    out$value = aggregate(X~t+health,D[D$health %in% health,],sum)$X / out$X # num / den
+    if (prop){ # proportion
+      out = aggregate(X~t,D,sum) # denominator
+      out$value = aggregate(X~t+health,D[D$health %in% health,],sum)$X / out$X # num / den
+    } else {
+      out = rename.cols(aggregate(X~t+health,D[D$health %in% health,],sum),X='value')
+    }
   } else {
-    out = aggregate(X~t+city+risk,D,sum) # denominator
-    out$value = aggregate(X~t+city+risk+health,D[D$health %in% health,],sum)$X / out$X  # num / den
+    if (prop){ # proportion
+      out = aggregate(X~t+city+risk,D,sum) # denominator
+      out$value = aggregate(X~t+city+risk+health,D[D$health %in% health,],sum)$X / out$X  # num / den
+    } else {
+      out = rename.cols(aggregate(X~t+city+risk+health,D[D$health %in% health,],sum),X='value')
+    }
   }
   return(.clean.out(out,'prevalence',aggr,city=city,risk=risk,seed=R$P$seed))
 }
