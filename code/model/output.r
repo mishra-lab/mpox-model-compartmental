@@ -37,7 +37,8 @@ out.fun.n = function(R.n,name,...){
 # - subset the data based on some stratifications
 # - compute & possibly aggregate the output across remaining stratifications
 
-out.prevalence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health='inf',strat=NULL,prop=T){
+out.prevalence = function(R,t=R$t,prop=T,strat=NULL,scale=NULL,
+                          city=.dn$city,risk=.dn$risk,health='inf'){
   # infection prevalence, but can also be used for other health states
   # prop aggregation uses sum(num) / sum(den)
   # absolute aggregate uses sum(num)
@@ -52,10 +53,12 @@ out.prevalence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health='inf',strat
     out = rename.cols(aggregate(f.health,D[D$health %in% health,],sum),X='value')
     name = 'prev.abs'
   }
+  out$value = out$value * ifelse(missing(scale),ifelse(prop,100,1),scale)
   return(.clean.out(out,name,city=city,risk=risk,health=health,seed=R$P$seed))
 }
 
-out.incidence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health=c('sus','vax'),strat='health',rate=T){
+out.incidence = function(R,t=R$t,rate=T,strat='health',scale=NULL,
+                         city=.dn$city,risk=.dn$risk,health=c('sus','vax')){
   # infection incidence, as a rate (per-susceptible) or absolute (counts)
   # rate aggregation uses sum(sus * inc) / sum(sus) - i.e. a weighted average of inc by sus
   # absolute aggregation uses sum(inf)
@@ -72,6 +75,7 @@ out.incidence = function(R,t=R$t,city=.dn$city,risk=.dn$risk,health=c('sus','vax
     out = rename.cols(aggregate(f.inf,D,sum),inf='value')
     name = 'inc.abs'
   }
+  out$value = out$value * ifelse(missing(scale),ifelse(rate,1000,1),scale)
   return(.clean.out(out,name,city=city,risk=risk,health=health,seed=R$P$seed))
 }
 

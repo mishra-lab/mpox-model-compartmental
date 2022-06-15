@@ -2,10 +2,10 @@
 library('ggplot2')
 
 .out.labs = list(
-  prev.prop  = 'Prevalence',
+  prev.prop  = 'Prevalence (%)',
   prev.abs   = 'Count',
-  inc.rate   = 'Incidence Rate',
-  inc.abs    = 'New Infections'
+  inc.rate   = 'Incidence rate (per 1000 person-days)',
+  inc.abs    = 'New infections (per day)'
 )
 
 .aggr.quantile = function(out,x,y,ci=.9,strat=c('city','risk','health')){
