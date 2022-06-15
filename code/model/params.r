@@ -60,8 +60,13 @@ def.params.fixed = function(P){
   P$C.sex.high    =  1/7   # daily sexual partnerships among high risk
   P$dur.exp       =     7  # 1 week incubation
   P$dur.inf       =    21  # 3 weeks infectious
-  P$iso.prop      =  0.50  # proportion isolating while infectious
+  P$iso.prop      =  0.30  # proportion isolating while infectious
   P$vax.eff       =  0.85 # vaccine effectiveness
+  P$vax.X         =  5000 # number of vaccines to distribute
+  P$vax.t0        =    60 # time (days) of starting vaccine roll-out
+  P$vax.dt        =    14 # duration (days) of vaccine roll-out
+  P$vax.high.ppv  =   0.9 # ppv of high risk among vaccinated
+  P$vax.x.city    = c(A=0.80,B=0.20) # allocation of vaccines in cities A,B
   # combinations / conditional values
   P$X             = sum(P$X.city)
   P$x.city.risk   = array(c(P$x.city.high,1-P$x.city.high),c(2,2),.dn[c('city','risk')]) # proportions
@@ -77,6 +82,7 @@ def.params.fixed = function(P){
   # DEBUG print(rowSums(P$C.sex,dim=2)) # == P$C.risk.sex
   # DEBUG print(rowSums(P$C.com,dim=2)) # == P$C.risk.com
   P$health.sus = array(c(1,1-P$vax.eff),dimnames=list(health=c('sus','vax')))
+  P$X.vax.city.risk = def.vax.city.risk(P)
   return(P)
 }
 
@@ -111,6 +117,17 @@ def.mix = function(X,C,asso.risk,asso.city){
     }
   }
   return(M)
+}
+
+def.vax.city.risk = function(P){
+  # compute the idstribution of vaccine allocation by city & risk
+  # given: X.city.risk, vax.X, vax.x.city, and vax.high.ppv
+  dn = list(risk=c('high','low'),vax=c('yes','no'))
+  X.vax.A = confusion.solve(P$X.city[1],P$X.city.risk[1,1],P$vax.X*P$vax.x.city[1],ppv=P$vax.high.ppv,dn=dn)$X
+  X.vax.B = confusion.solve(P$X.city[2],P$X.city.risk[2,1],P$vax.X*P$vax.x.city[2],ppv=P$vax.high.ppv,dn=dn)$X
+  # DEBUG print(sum(X.vax.A)+sum(X.vax.B)) # == P$X
+  # DEBUG print(sum(X.vax.A[,1])+sum(X.vax.B[,1])) # == P$vax.X
+  return(array(c(X.vax.A[1,1],X.vax.B[1,1],X.vax.A[2,1],X.vax.B[2,1]),c(2,2),.dn[1:2]))
 }
 
 def.X0 = function(P){

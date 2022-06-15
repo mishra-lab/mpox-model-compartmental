@@ -58,10 +58,22 @@ sys.dX = function(P,X,t){
   dXi = X[,,4] / P$dur.inf
   dX[,,4] = dX[,,4] - dXi
   dX[,,5] = dX[,,5] + dXi
+  # vaccination
+  dXi = sys.vax(P,X,t)
+  dX[,,1] = dX[,,1] - dXi
+  dX[,,2] = dX[,,2] + dXi
   return(list(
     dX  = dX,
     inc = inc
   ))
+}
+
+sys.vax = function(P,X,t){
+  if (t >= P$vax.t0 && t < (P$vax.t0 + P$vax.dt)){
+    return(P$X.vax.city.risk / P$vax.dt)
+  } else {
+    return(0)
+  }
 }
 
 sys.inc = function(P,X,t){
