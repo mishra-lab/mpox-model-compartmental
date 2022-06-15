@@ -47,7 +47,7 @@ sys.dX = function(P,X,t){
   dX  = 0*X # initialize
   # incidence (to exposed)
   inc = sys.inc(P,X,t)
-  inf = sweep(X[,,1:2],c(1,2),inc,'*')
+  inf = X[,,1:2] * inc
   dX[,,1:2] = dX[,,1:2] - inf
   dX[,,3]   = dX[,,3] + rowSums(inf,dim=2)
   # incubation
@@ -67,11 +67,10 @@ sys.dX = function(P,X,t){
 sys.inc = function(P,X,t){
   # compute incidence
   prev.city.risk = X[,,4] / P$X.city.risk
-  inc = (
+  inc = (1 - P$iso.prop) * (
     # multiply beta & 'C' (with mixing) by appropriate prevalence & sum across 'others'
     P$beta.sex * rowSums(sweep(P$C.sex,c(3,4),prev.city.risk,'*'),dim=2) +
     P$beta.com * rowSums(sweep(P$C.com,c(3,4),prev.city.risk,'*'),dim=2)
   )
-  # TODO: vax
-  return(inc)
+  return(outer(inc,P$health.sus))
 }
