@@ -37,45 +37,53 @@ out.fun.n = function(R.n,name,...){
 # - subset the data based on some stratifications
 # - compute & possibly aggregate the output across remaining stratifications
 
-out.prevalence = function(R,t=R$t,prop=T,strat=NULL,scale=NULL,
+out.prevalence = function(R,t=R$t,mode='prop',strat=NULL,scale=NULL,
                           city=.dn$city,risk=.dn$risk,health='inf'){
   # infection prevalence, but can also be used for other health states
   # prop aggregation uses sum(num) / sum(den)
   # absolute aggregate uses sum(num)
-  D = .get.long(R,t,city,risk)
+  D = .get.long(R,t,city=city,risk=risk)
   f.0      = formula(paste('X ~',paste(c('t',strat),collapse=' + ')))
   f.health = formula(paste('X ~',paste(c('t','health',strat),collapse=' + ')))
-  if (prop){ # proportion
+  if (mode %in% c('prop')){ # proportion
     out = aggregate(f.0,D,sum)
     out$value = aggregate(f.health,D[D$health %in% health,],sum)$X / out$X
     name = 'prev.prop'
-  } else { # absolute counts
+  }
+  if (mode %in% c('abs')){ # absolute counts
     out = rename.cols(aggregate(f.health,D[D$health %in% health,],sum),X='value')
     name = 'prev.abs'
   }
-  out$value = out$value * ifelse(missing(scale),ifelse(prop,100,1),scale)
+  scale = ifelse(!missing(scale),scale,switch(mode,prop=100,abs=1))
+  out$value = out$value * scale
   return(.clean.out(out,name,city=city,risk=risk,health=health,seed=R$P$seed))
 }
 
-out.incidence = function(R,t=R$t,rate=T,strat='health',scale=NULL,
+out.incidence = function(R,t=R$t,mode='rate',strat='health',scale=NULL,
                          city=.dn$city,risk=.dn$risk,health=c('sus','vax')){
   # infection incidence, as a rate (per-susceptible) or absolute (counts)
   # rate aggregation uses sum(sus * inc) / sum(sus) - i.e. a weighted average of inc by sus
   # absolute aggregation uses sum(inf)
-  D     = .get.long(R,t,city,risk,health)
-  D$inc = .get.long(R,t,city,risk,health,name='inc')$inc
+  D     = .get.long(R,t,city=city,risk=risk,health=health)
+  D$inc = .get.long(R,t,city=city,risk=risk,health=health,name='inc')$inc
   D$inf = D$X * D$inc
   f.X   = formula(paste('X ~',paste(c('t',strat),collapse=' + ')))
   f.inf = formula(paste('inf ~',paste(c('t',strat),collapse=' + ')))
-  if (rate){ # per-susceptible
+  if (mode %in% c('rate','cum.rate')){ # per-susceptible
     out = aggregate(f.X,D,sum)
     out$value = aggregate(f.inf,D,sum)$inf / out$X
     name = 'inc.rate'
-  } else { # infection counts
+  }
+  if (mode %in% c('abs','cum.abs')){ # infection counts
     out = rename.cols(aggregate(f.inf,D,sum),inf='value')
     name = 'inc.abs'
   }
-  out$value = out$value * ifelse(missing(scale),ifelse(rate,1000,1),scale)
+  if (mode %in% c('cum.rate','cum.abs')){
+    out$value = cumfun.group(out,strat)
+    name = paste0(name,'.cum')
+  }
+  scale = ifelse(!missing(scale),scale,switch(mode,rate=1000,cum.rate=100,abs=1,cum.abs=1))
+  out$value = out$value * scale
   return(.clean.out(out,name,city=city,risk=risk,health=health,seed=R$P$seed))
 }
 
