@@ -2,6 +2,11 @@ library('parallel')
 
 ndim = function(x){ length(dim(x)) }
 
+cumfun.group = function(x,strat,fun=cumsum,name='value'){
+  # apply a cumulative function to x[[value]], stratified by x[strat]
+  return(do.call(ave,c(list(x=x[[name]],FUN=fun),x[strat])))
+}
+
 rename.cols = function(x,...){
   # e.g. rename.cols(X,a='apples') would rename column 'a' to 'apples'
   map = list(...)
