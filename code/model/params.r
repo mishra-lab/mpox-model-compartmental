@@ -7,7 +7,7 @@ source('utils/stats.r')
   health  = c('sus','vax','exp','inf','rec')
 )
 
-def.t = function(t0=0,t1=120,dt=1){
+def.t = function(t0=0,t1=150,dt=1){
   # wrapper function (mainly for default values)
   return(seq(t0,t1,dt))
 }
@@ -35,66 +35,75 @@ def.params.fitted = function(seed=NULL){
   set.seed(seed)
   P = list() 
   P$seed = seed
-  P$C.com.all = f.gamma('r',m=1.50,sd=1.0,n=1)
-  P$beta.sex  = f.gamma('r',m=0.70,sd=0.2,n=1)
-  P$beta.com  = f.gamma('r',m=0.10,sd=0.1,n=1)
+  # TODO: revisit when needed
   return(P)
 }
 
 def.params.hand = function(){
   P = list()
-  P$C.com.all = 1.00 # daily community "encounters" among high and low risk
-  P$beta.sex  = 0.90 # transmission probability per sex partner
-  P$beta.com  = 0.05 # transmission probability per community encounter
+  # TODO: revisit when needed
   return(P)
 }
 
 def.params.fixed = function(P){
-  # input values
-  P$X.city        = c(A=50000,B=20000) # population size in cities A,B
-  P$x.city.high   = c(A=.20,B=.15) # proportion in higher risk in cities A,B
-  P$X0.exp        = array(c(A.high=1,B.high=.3,A.low=0,B.low=0),c(2,2)) # number initially exposed
-  P$X0.inf        = array(c(A.high=1,B.high=.3,A.low=0,B.low=0),c(2,2)) # number initially infected
-  P$asso.sex      =  0.00  # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
-  P$asso.com      =  0.00  # assort (epsilon) in community contacts:  0 = random; 1 = assortative
-  P$asso.city     =  0.99  # assort (epsilon) between cities:         0 = random; 1 = assortative
-  P$C.sex.low     =  1/90  # daily sexual partnerships among low risk
-  P$C.sex.high    =  1/7   # daily sexual partnerships among high risk
-  P$dur.exp       =     7  # 1 week incubation
-  P$dur.inf       =    21  # 3 weeks infectious
-  P$iso.prop      =  0.30  # proportion isolating while infectious
-  P$vax.eff       =  0.85 # vaccine effectiveness
-  P$vax.X         =  5000 # number of vaccines to distribute
-  P$vax.t0        =    60 # time (days) of starting vaccine roll-out
-  P$vax.dt        =    14 # duration (days) of vaccine roll-out
-  P$vax.high.ppv  =   0.9 # ppv of high risk among vaccinated
-  P$vax.x.city    = c(A=0.80,B=0.20) # allocation of vaccines in cities A,B
+  # population
+  P$X             = 100000 # total population size
+  P$x.A           =   0.50 # proportion of total population in city A
+  P$x.high.A      =   0.10 # proportion in higher risk in city A
+  P$x.high.B      =   0.10 # proportion in higher risk in city B
+  P$X0.ei         =      4 # proportion initially exposed/infected
+  P$x0.ei.high    =   0.50 # proportion in higher risk among initially exposed/infected
+  P$x0.ei.A       =   0.50 # proportion in city A among initially exposed/infected
+  # mixing + contacts
+  P$asso.sex      =   0.00 # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
+  P$asso.com      =   0.00 # assort (epsilon) in community contacts:  0 = random; 1 = assortative
+  P$asso.city     =   0.95 # assort (epsilon) between cities:         0 = random; 1 = assortative
+  P$C.sex.low     =   1/90 # daily sexual partnerships among low risk
+  P$C.sex.high.A  =   1/5  # daily sexual partnerships among high risk
+  P$C.sex.high.B  =   1/5  # daily sexual partnerships among high risk
+  P$C.com.all     =   1.00 # daily community contacts among high and low risk
+  # transmission + infection
+  P$sar.sex       =   0.90 # transmission probability per sex partner
+  P$sar.com       =   0.05 # transmission probability per community encounter
+  P$dur.exp       =      7 # 1 week incubation
+  P$dur.inf       =     21 # 3 weeks infectious
+  P$iso.prop      =   0.50 # proportion isolating while infectious
+  # vaccination
+  P$vax.eff       =   0.85 # vaccine effectiveness
+  P$vax.X         =   5000 # number of vaccines to distribute
+  P$vax.x.A       =   1.00 # proportion of vaccines to distribute to city A
+  P$vax.t0        =     60 # time (days) of starting vaccine roll-out
+  P$vax.dt        =      7 # duration (days) of vaccine roll-out
+  P$vax.high.ppv  =   0.90 # ppv of high risk among vaccinated
   return(P)
 }
 
 def.params.cond = function(P){
-  # combinations / conditional values
-  P$X             = sum(P$X.city)
-  P$x.city.risk   = array(c(P$x.city.high,1-P$x.city.high),c(2,2),.dn[c('city','risk')]) # proportions
-  P$X.city.risk   = P$x.city.risk * P$X.city  # absolute
-  P$C.risk.sex    = array(c(P$C.sex.high, P$C.sex.low), dimnames=.dn['risk'])
-  P$C.risk.com    = array(c(P$C.com.all,  P$C.com.all), dimnames=.dn['risk'])
-  P$M.sex         = def.mix(P$X.city.risk, P$C.risk.sex, P$asso.sex, P$asso.city)
-  P$M.com         = def.mix(P$X.city.risk, P$C.risk.com, P$asso.com, P$asso.city)
-  P$C.sex         = sweep(P$M.sex,2,P$C.risk.sex,'*')
-  P$C.com         = sweep(P$M.sex,2,P$C.risk.com,'*')
+  P$X.city           = P$X * c(A=P$x.A,B=1-P$x.A)
+  P$x.city.risk      = array(c(P$x.high.A,P$x.high.B,1-P$x.high.A,1-P$x.high.B),c(2,2),.dn[c('city','risk')])
+  P$X.city.risk      = P$X.city * P$x.city.risk  # absolute
+  P$x0.ei.city       = c(A=P$x0.ei.A,B=1-P$x0.ei.A)
+  P$x0.ei.risk       = c(high=P$x0.ei.high,low=1-P$x0.ei.high)
+  P$x0.ei.city.risk  = array(outer(P$x0.ei.city,P$x0.ei.risk),c(2,2),.dn[c('city','risk')])
+  P$C.sex.city.risk  = array(c(P$C.sex.high.A,P$C.sex.high.B,rep(P$C.sex.low,2)),c(2,2),.dn[c('city','risk')])
+  P$C.com.city.risk  = array(rep(P$C.com.all,4),c(2,2),.dn[c('city','risk')])
+  P$M.sex = def.mix(P$X.city.risk,P$C.sex.city.risk,P$asso.sex,P$asso.city)
+  P$M.com = def.mix(P$X.city.risk,P$C.com.city.risk,P$asso.com,P$asso.city)
+  P$C.sex = sweep(P$M.sex,c(1,2),P$C.sex.city.risk,'*')
+  P$C.com = sweep(P$M.sex,c(1,2),P$C.com.city.risk,'*')
   # DEBUG print(rowSums(P$M.sex,dim=2)) # == 1
   # DEBUG print(rowSums(P$M.com,dim=2)) # == 1
-  # DEBUG print(rowSums(P$C.sex,dim=2)) # == P$C.risk.sex
-  # DEBUG print(rowSums(P$C.com,dim=2)) # == P$C.risk.com
+  # DEBUG print(rowSums(P$C.sex,dim=2)) == P$C.sex.city.risk)
+  # DEBUG print(rowSums(P$C.com,dim=2)) == P$C.com.city.risk)
   P$health.sus = array(c(1,1-P$vax.eff),dimnames=list(health=c('sus','vax')))
+  P$vax.x.city = c(A=P$vax.x.A,B=1-P$vax.x.A)
   P$X.vax.city.risk = def.vax.city.risk(P)
   return(P)
 }
 
 def.mix = function(X,C,asso.risk,asso.city){
   # define the probability distribution of contacts "M"
-  XC = sweep(X,2,C,'*') # total contacts "offered"
+  XC = X * C
   xc.y = rowSums(XC,dim=1)/sum(XC) # proportion XC by city (all risk)
   xc.i = colSums(XC,dim=1)/sum(XC) # proportion XC by risk (all city)
   M = array( # initialize
@@ -138,9 +147,11 @@ def.vax.city.risk = function(P){
 
 def.X0 = function(P){
   # define initial conditions
-  X0.data = outer(P$X.city.risk,c(1,0,0,0,0)) # expand into new 'health' dimension
-  X0.data[,,1] = X0.data[,,1] - P$X0.exp - P$X0.inf # remove initial exp & inf from sus
-  X0.data[,,3] = P$X0.exp # add back initial exp
-  X0.data[,,4] = P$X0.inf # add back initial inf
+  x0.exp.inf      = c(P$dur.exp,P$dur.inf)/(P$dur.exp+P$dur.inf)
+  X0.ei.city.risk = P$X0.ei * P$x0.ei.city.risk
+  X0.data      = outer(P$X.city.risk,c(1,0,0,0,0)) # expand into new 'health' dimension
+  X0.data[,,1] = X0.data[,,1] - X0.ei.city.risk # remove initial exp/inf from sus
+  X0.data[,,3] = X0.ei.city.risk * x0.exp.inf[1] # add back initial exp
+  X0.data[,,4] = X0.ei.city.risk * x0.exp.inf[2] # add back initial inf
   return(array(X0.data, c(2,2,5), .dn))
 }

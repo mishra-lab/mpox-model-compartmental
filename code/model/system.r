@@ -80,9 +80,9 @@ sys.inc = function(P,X,t){
   # compute incidence
   prev.city.risk = X[,,4] / P$X.city.risk
   inc = (1 - P$iso.prop) * (
-    # multiply beta & 'C' (with mixing) by appropriate prevalence & sum across 'others'
-    P$beta.sex * rowSums(sweep(P$C.sex,c(3,4),prev.city.risk,'*'),dim=2) +
-    P$beta.com * rowSums(sweep(P$C.com,c(3,4),prev.city.risk,'*'),dim=2)
+    # multiply sar & 'C' (with mixing) by appropriate prevalence & sum across 'others'
+    P$sar.sex * rowSums(sweep(P$C.sex,c(3,4),prev.city.risk,'*'),dim=2) +
+    P$sar.com * rowSums(sweep(P$C.com,c(3,4),prev.city.risk,'*'),dim=2)
   )
   return(outer(inc,P$health.sus))
 }
