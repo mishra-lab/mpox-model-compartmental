@@ -17,7 +17,7 @@ def.params.n = function(n){
   return(lapply(seq(n),def.params))
 }
 
-def.params = function(seed=NULL){
+def.params = function(seed=NULL,...){
   # main function to define parameter set
   if (is.null(seed)){
     P = def.params.hand()
@@ -25,6 +25,8 @@ def.params = function(seed=NULL){
     P = def.params.fitted(seed)
   }
   P = def.params.fixed(P)
+  P = list.update(P,...) # override any fixed or fitted
+  P = def.params.cond(P)
   P$X0 = def.X0(P)
   return(P)
 }
@@ -67,6 +69,10 @@ def.params.fixed = function(P){
   P$vax.dt        =    14 # duration (days) of vaccine roll-out
   P$vax.high.ppv  =   0.9 # ppv of high risk among vaccinated
   P$vax.x.city    = c(A=0.80,B=0.20) # allocation of vaccines in cities A,B
+  return(P)
+}
+
+def.params.cond = function(P){
   # combinations / conditional values
   P$X             = sum(P$X.city)
   P$x.city.risk   = array(c(P$x.city.high,1-P$x.city.high),c(2,2),.dn[c('city','risk')]) # proportions
