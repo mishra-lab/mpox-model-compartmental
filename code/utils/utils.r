@@ -9,10 +9,19 @@ cumfun.group = function(x,strat,fun=cumsum,name='value'){
 
 rename.cols = function(x,...){
   # e.g. rename.cols(X,a='apples') would rename column 'a' to 'apples'
-  map = list(...)
-  for (name in names(map)){
-    x[[map[[name]]]] = x[[name]]
+  args = list(...)
+  for (name in names(args)){
+    x[[args[[name]]]] = x[[name]]
     x[[name]] = NULL
+  }
+  return(x)
+}
+
+list.update = function(x,...){
+  # e.g. list.update(list(a=1,b=2),a=3) -> list(a=3,b=2)
+  args = list(...)
+  for (name in names(args)){
+    x[[name]] = args[[name]]
   }
   return(x)
 }
