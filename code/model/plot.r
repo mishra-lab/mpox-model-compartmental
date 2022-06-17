@@ -36,6 +36,11 @@ plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
   }
   # clean-up, etc.
    g = g +
-    labs(x='Time (days)',y=ylabel)
+    labs(x='Time (days)',y=ylabel) +
+    lims(y=c(0,NA))
   return(g)
+}
+
+show.vax = function(P){
+  annotate('rect',xmin=P$vax.t0,xmax=P$vax.t0+P$vax.dt,ymin=-Inf,ymax=Inf,alpha=.15)
 }
