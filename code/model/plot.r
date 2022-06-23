@@ -22,6 +22,19 @@ library('ggplot2')
   return(do.call(aes_string,list(x=x,y=paste0(y,'.1'),ymin=paste0(y,'.2'),ymax=paste0(y,'.3'),...)))
 }
 
+.get.brewer = function(n,palette='Spectral',...){
+  # interpolate brewer colours for any n, since tidy team is pedantic about discrete vs continuous
+  return(suppressWarnings({
+    colorRampPalette(RColorBrewer::brewer.pal(99,palette))(n)
+  }))
+}
+
+.plot.clean = function(g){
+  # apply some common adjustments
+  g + theme_light() +
+    theme(strip.background=element_rect(fill='gray50'))
+}
+
 plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
   # plot an output
   if (missing(ylabel)){ ylabel = .out.labs[[out$name[1]]] }
@@ -38,9 +51,15 @@ plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
    g = g +
     labs(x='Time (days)',y=ylabel) +
     lims(y=c(0,NA))
-  return(g)
+  .plot.clean(g)
 }
 
 show.vax = function(P){
+  # draw a rectangle for the period of vax roll-out
   annotate('rect',xmin=P$vax.t0,xmax=P$vax.t0+P$vax.dt,ymin=-Inf,ymax=Inf,alpha=.15)
+}
+
+plot.save = function(...,w=4,h=3){
+  # save a plot to default directory
+  ggsave(paste0(root.path('out','fig','model',...,create=TRUE),'.pdf'),w=w,h=h)
 }
