@@ -55,7 +55,7 @@ def.params.fixed = function(P){
   P$vax.x.A       =   1.00 # proportion of vaccines to distribute to city A
   P$vax.t0        =     60 # time (days) of starting vaccine roll-out
   P$vax.dt        =      7 # duration (days) of vaccine roll-out
-  P$vax.high.ppv  =   0.90 # ppv of high risk among vaccinated
+  P$vax.high.sens =   0.90 # sensitivity of high risk among vaccinated
   return(P)
 }
 
@@ -117,10 +117,10 @@ def.mix = function(X,C,asso.risk,asso.city){
 
 def.vax.city.risk = function(P){
   # compute the idstribution of vaccine allocation by city & risk
-  # given: X.city.risk, vax.X, vax.x.city, and vax.high.ppv
+  # given: X.city.risk, vax.X, vax.x.city, and vax.high.sens
   dn = list(risk=c('high','low'),vax=c('yes','no'))
-  X.vax.A = confusion.solve(P$X.city[1],P$X.city.risk[1,1],P$vax.X*P$vax.x.city[1],ppv=P$vax.high.ppv,dn=dn)$X
-  X.vax.B = confusion.solve(P$X.city[2],P$X.city.risk[2,1],P$vax.X*P$vax.x.city[2],ppv=P$vax.high.ppv,dn=dn)$X
+  X.vax.A = confusion.solve(P$X.city[1],P$X.city.risk[1,1],P$vax.X*P$vax.x.city[1],sens=P$vax.high.sens,dn=dn)$X
+  X.vax.B = confusion.solve(P$X.city[2],P$X.city.risk[2,1],P$vax.X*P$vax.x.city[2],sens=P$vax.high.sens,dn=dn)$X
   # DEBUG print(sum(X.vax.A)+sum(X.vax.B)) # == P$X
   # DEBUG print(sum(X.vax.A[,1])+sum(X.vax.B[,1])) # == P$vax.X
   return(array(c(X.vax.A[1,1],X.vax.B[1,1],X.vax.A[2,1],X.vax.B[2,1]),c(2,2),.dn[1:2]))
