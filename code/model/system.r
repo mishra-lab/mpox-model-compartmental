@@ -90,6 +90,7 @@ sys.inc = function(P,X,t){
 }
 
 sys.R0 = function(P){
+  # compute the R0 for each city (assuming no inter-city mixing)
   M.sex = def.mix(P$X.city.risk,P$C.sex.city.risk,P$asso.sex,1)
   M.com = def.mix(P$X.city.risk,P$C.com.city.risk,P$asso.com,1)
   R0 = lapply(list(A=1,B=2),function(city){
