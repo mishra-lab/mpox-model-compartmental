@@ -88,3 +88,18 @@ sys.inc = function(P,X,t){
   )
   return(outer(inc,P$health.sus))
 }
+
+sys.R0 = function(P){
+  M.sex = def.mix(P$X.city.risk,P$C.sex.city.risk,P$asso.sex,1)
+  M.com = def.mix(P$X.city.risk,P$C.com.city.risk,P$asso.com,1)
+  R0 = lapply(list(A=1,B=2),function(city){
+    Kij = function(i,j){
+      (1 - P$iso.prop) * (
+        P$sar.sex * P$C.sex.city.risk[city,i] * M.sex[city,i,city,j] +
+        P$sar.com * P$C.com.city.risk[city,i] * M.com[city,i,city,j]
+      ) * P$dur.inf * P$X.city.risk[city,i] / P$X.city.risk[city,j]
+    }
+    K = array(c(Kij(1,1),Kij(2,1),Kij(1,2),Kij(2,2)),c(2,2))
+    return(max(eigen(K)$values))
+  })
+}
