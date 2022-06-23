@@ -51,10 +51,10 @@ def.params.fixed = function(P){
   P$iso.prop      =   0.50 # proportion isolating while infectious
   # vaccination
   P$vax.eff       =   0.85 # vaccine effectiveness
-  P$vax.X         =   5000 # number of vaccines to distribute
+  P$vax.X         =  10000 # number of vaccines to distribute
   P$vax.x.A       =   1.00 # proportion of vaccines to distribute to city A
-  P$vax.t0        =     60 # time (days) of starting vaccine roll-out
-  P$vax.dt        =      7 # duration (days) of vaccine roll-out
+  P$vax.t0        =     45 # time (days) of starting vaccine roll-out
+  P$vax.dt        =     30 # duration (days) of vaccine roll-out
   P$vax.high.sens =   0.90 # sensitivity of high risk among vaccinated
   return(P)
 }
