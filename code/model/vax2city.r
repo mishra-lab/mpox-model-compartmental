@@ -30,4 +30,18 @@ v2c.examples = function(){
   }
 }
 
-v2c.examples()
+v2c.optimize = function(P=NULL){
+  if (is.null(P)){ P = def.params() }
+  t = def.t()
+  obj.fun = function(x){
+    P$vax.x.city = c(A=x,B=1-x)
+    P$X.vax.city.risk = def.vax.city.risk(P)
+    R = sys.run(P,t)
+    out.incidence(R,mode='cum.abs',strat=NULL)$value[length(t)]
+  }
+  return(optimize(obj.fun,c(0,1))$minimum)
+}
+
+# v2c.examples()
+v2c.optimize()
+

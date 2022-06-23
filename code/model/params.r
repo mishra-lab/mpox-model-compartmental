@@ -22,7 +22,6 @@ def.params = function(seed=NULL,...){
   P = def.params.fixed(P)
   P = list.update(P,...) # override any fixed or fitted
   P = def.params.cond(P)
-  P$X0 = def.X0(P)
   return(P)
 }
 
@@ -79,6 +78,7 @@ def.params.cond = function(P){
   P$health.sus = array(c(1,1-P$vax.eff),dimnames=list(health=c('sus','vax')))
   P$vax.x.city = c(A=P$vax.x.A,B=1-P$vax.x.A)
   P$X.vax.city.risk = def.vax.city.risk(P)
+  P$X0 = def.X0(P)
   return(P)
 }
 
