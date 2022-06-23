@@ -104,3 +104,22 @@ sys.R0 = function(P){
     return(max(eigen(K)$values))
   })
 }
+
+sys.fit.R0 = function(R0,var,range,P=NULL,city='A'){
+  # adjust P[[var]] within range so that sys.R0[[city]] == R0
+  if (is.null(P)){ P = def.params() }
+  obj.fun = function(x){
+    P[[var]] = x
+    R0.x = sys.R0(def.params.cond(P))[[city]]
+    return((R0-R0.x)^2)
+  }
+  opt = optimize(obj.fun,range)
+  if (opt$objective > 1e-3){
+    warning(
+      '\n  did not converge',
+      '\n  objective: ',opt$objective,
+      '\n  target R0: ',R0,
+      '\n  var: "',var,'", current value = ',opt$minimum)
+  }
+  return(opt$minimum)
+}
