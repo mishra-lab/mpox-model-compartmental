@@ -18,30 +18,11 @@ def.params.n = function(n){
 }
 
 def.params = function(seed=NULL,...){
-  # main function to define parameter set
-  if (is.null(seed)){
-    P = def.params.hand()
-  } else {
-    P = def.params.fitted(seed)
-  }
+  P = list()
   P = def.params.fixed(P)
   P = list.update(P,...) # override any fixed or fitted
   P = def.params.cond(P)
   P$X0 = def.X0(P)
-  return(P)
-}
-
-def.params.fitted = function(seed=NULL){
-  set.seed(seed)
-  P = list() 
-  P$seed = seed
-  # TODO: revisit when needed
-  return(P)
-}
-
-def.params.hand = function(){
-  P = list()
-  # TODO: revisit when needed
   return(P)
 }
 
@@ -51,16 +32,16 @@ def.params.fixed = function(P){
   P$x.A           =   0.50 # proportion of total population in city A
   P$x.high.A      =   0.10 # proportion in higher risk in city A
   P$x.high.B      =   0.10 # proportion in higher risk in city B
-  P$X0.ei         =      4 # proportion initially exposed/infected
-  P$x0.ei.high    =   0.50 # proportion in higher risk among initially exposed/infected
+  P$X0.ei         =     10 # number initially exposed/infected
+  P$x0.ei.high    =   1.00 # proportion in higher risk among initially exposed/infected
   P$x0.ei.A       =   0.50 # proportion in city A among initially exposed/infected
   # mixing + contacts
-  P$asso.sex      =   0.00 # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
+  P$asso.sex      =   0.50 # assort (epsilon) in sexual partnerships: 0 = random; 1 = assortative
   P$asso.com      =   0.00 # assort (epsilon) in community contacts:  0 = random; 1 = assortative
-  P$asso.city     =   0.95 # assort (epsilon) between cities:         0 = random; 1 = assortative
+  P$asso.city     =   0.90 # assort (epsilon) between cities:         0 = random; 1 = assortative
   P$C.sex.low     =   1/90 # daily sexual partnerships among low risk
-  P$C.sex.high.A  =   1/5  # daily sexual partnerships among high risk
-  P$C.sex.high.B  =   1/5  # daily sexual partnerships among high risk
+  P$C.sex.high.A  =   .178  # daily sexual partnerships among high risk in city A
+  P$C.sex.high.B  =   .178  # daily sexual partnerships among high risk in city B
   P$C.com.all     =   1.00 # daily community contacts among high and low risk
   # transmission + infection
   P$sar.sex       =   0.90 # transmission probability per sex partner
