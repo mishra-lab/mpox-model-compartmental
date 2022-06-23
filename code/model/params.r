@@ -59,11 +59,11 @@ def.params.fixed = function(P){
 }
 
 def.params.cond = function(P){
-  P$X.city           = P$X * c(A=P$x.A,B=1-P$x.A)
+  P$X.city           = P$X * c('A'=P$x.A,'B'=1-P$x.A)
   P$x.city.risk      = array(c(P$x.high.A,P$x.high.B,1-P$x.high.A,1-P$x.high.B),c(2,2),.dn[c('city','risk')])
   P$X.city.risk      = P$X.city * P$x.city.risk  # absolute
-  P$x0.ei.city       = c(A=P$x0.ei.A,B=1-P$x0.ei.A)
-  P$x0.ei.risk       = c(high=P$x0.ei.high,low=1-P$x0.ei.high)
+  P$x0.ei.city       = c('A'=P$x0.ei.A,'B'=1-P$x0.ei.A)
+  P$x0.ei.risk       = c('high'=P$x0.ei.high,'low'=1-P$x0.ei.high)
   P$x0.ei.city.risk  = array(outer(P$x0.ei.city,P$x0.ei.risk),c(2,2),.dn[c('city','risk')])
   P$C.sex.city.risk  = array(c(P$C.sex.high.A,P$C.sex.high.B,rep(P$C.sex.low,2)),c(2,2),.dn[c('city','risk')])
   P$C.com.city.risk  = array(rep(P$C.com.all,4),c(2,2),.dn[c('city','risk')])
@@ -76,7 +76,7 @@ def.params.cond = function(P){
   # DEBUG print(rowSums(P$C.sex,dim=2)) == P$C.sex.city.risk)
   # DEBUG print(rowSums(P$C.com,dim=2)) == P$C.com.city.risk)
   P$health.sus = array(c(1,1-P$vax.eff),dimnames=list(health=c('sus','vax')))
-  P$vax.x.city = c(A=P$vax.x.A,B=1-P$vax.x.A)
+  P$vax.x.city = c('A'=P$vax.x.A,'B'=1-P$vax.x.A)
   P$X.vax.city.risk = def.vax.city.risk(P)
   P$X0 = def.X0(P)
   return(P)
