@@ -1,5 +1,3 @@
-library('parallel')
-
 ndim = function(x){ length(dim(x)) }
 
 cumfun.group = function(x,strat,fun=cumsum,name='value'){
@@ -29,13 +27,4 @@ list.update = function(x,...){
 ci.to.q = function(ci){
   # e.g. ci=.95 -> c(.025,.975)
   return(c((1-ci)/2,1-(1-ci)/2))
-}
-
-par.lapply = function(x,fun,export=NULL,n.cores=7,...){
-  # lapply fun on x in parallel, using n.cores, after exporting some variables
-  cl = makeCluster(n.cores)
-  clusterExport(cl,export)
-  R = parLapply(cl,x,fun,...)
-  stopCluster(cl)
-  return(R)
 }

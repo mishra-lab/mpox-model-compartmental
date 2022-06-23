@@ -1,4 +1,5 @@
 # functions for running the model
+library('parallel')
 
 sys.init.X = function(X0,t){
   # expand "X0" into a new dimension "t"
@@ -14,9 +15,10 @@ sys.init.X = function(X0,t){
   return(X)
 }
 
-sys.run.n = function(P.n,t,para=T){
-  if (para){
-    R.n = par.lapply(P.n,sys.run,t=t,export=c('ndim','sys.init.X','sys.dX','sys.inc'))
+sys.run.n = function(P.n,t,cpus=7){
+  # run the model, usually in parallel
+  if (cpus > 1){
+    R.n = mclapply(P.n,sys.run,t=t,mc.cores=cpus)
   } else {
     R.n = lapply(P.n,sys.run,t=t)
   }
