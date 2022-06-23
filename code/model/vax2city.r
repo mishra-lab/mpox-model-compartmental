@@ -3,6 +3,7 @@ source('model/params.r')
 source('model/system.r')
 source('model/output.r')
 source('model/plot.r')
+source('model/grid.r')
 
 city.colours = .get.brewer(11)[c(2,10)]
 
@@ -31,6 +32,7 @@ v2c.examples = function(){
 }
 
 v2c.optimize = function(P=NULL){
+  # find the optimal allocation of vaccines between cities A & B
   if (is.null(P)){ P = def.params() }
   t = def.t()
   obj.fun = function(x){
@@ -42,6 +44,5 @@ v2c.optimize = function(P=NULL){
   return(optimize(obj.fun,c(0,1))$minimum)
 }
 
-# v2c.examples()
-v2c.optimize()
-
+grid = grid.run()
+plot.grid(grid,x='x0.ei.A',y='R0.A',z='opt.vax.x.A',facet='asso.city~x.A'); plot.save('grid',w=8,h=7)
