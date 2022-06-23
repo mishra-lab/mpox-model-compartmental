@@ -1,5 +1,12 @@
 ndim = function(x){ length(dim(x)) }
 
+root.path = function(...,create=FALSE){
+  root = strsplit(file.path(getwd(),''),file.path('','code',''))[[1]][1]
+  path = file.path(root,...)
+  if (create & !dir.exists(dirname(path))){ dir.create(dirname(path),recursive=TRUE) }
+  return(path)
+}
+
 cumfun.group = function(x,strat,fun=cumsum,name='value'){
   # apply a cumulative function to x[[value]], stratified by x[strat]
   return(do.call(ave,c(list(x=x[[name]],FUN=fun),x[strat])))
