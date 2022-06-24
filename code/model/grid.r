@@ -19,13 +19,40 @@ grid.run = function(n=11,main.vars=c('R0.A','x0.ei.A')){
   return(grid)
 }
 
-plot.grid = function(grid,x,y,z,facet,n=9){
+grid.clean = function(grid){
+  R0.B = sys.R0(def.params())$B
+  # simple variable clean-up
+  grid$R0.AvB = grid$R0.A / R0.B
+  grid$x0.ei.A.pct = 100 * grid$x0.ei.A
+  grid$f.X.AvB = factor(grid$x.A/(1-grid$x.A),levels=c(1/3,1,3),
+    labels=c('City B larger','Cities same size','City A larger'))
+  grid$f.mix.city = factor(grid$asso.city,levels=unique(grid$asso.city),
+    labels=paste0(c('Most','Moderate','Least'),' inter-city mixing'))
+  return(grid)
+}
+
+grid.rdata = function(n=11,slug='grid',grid=NULL){
+  # save or load grid data to / from file
+  fname = root.path('data','.rdata',paste0(slug,'-n',n,'.rdata'),create=TRUE)
+  if (is.null(grid)){
+    load(file=fname)
+  } else {
+    save(grid,file=fname)
+  }
+  return(grid)
+}
+
+plot.grid = function(grid,x,y,z,facet,n=11){
   .labs = list( # TODO: update
-    opt.vax.x.A = 'Optimal\nvaccine\nallocation',
-    asso.city   = 'fraction of contacts in same city',
-    x.A         = 'fraction of overall population in city A',
-    x0.ei.A     = 'fraction of initial infections in city A',
-    R0.A        = 'Ro in city A'
+    opt.vax.x.A   = 'Optimal\nvaccine\nallocation',
+    asso.city     = 'Fraction of contacts in same city',
+    asso.city.pct = 'Contacts in same city (%)',
+    x.A           = 'Fraction of overall population in city A',
+    x.A.pct       = 'Overall population in city A (%)',
+    x0.ei.A       = 'Fraction of seed cases in city A',
+    x0.ei.A.pct   = 'Seed cases in city A (%)',
+    R0.A          = 'Ro in City A',
+    R0.AvB        = 'Ro in City A vs City B'
   )
   c.vals = rev(.get.brewer(n,'Spectral'))
   c.labs = c('B 90%+',rep('',n/2-1.5),'50 / 50',rep('',n/2-1.5),'A 90%+')

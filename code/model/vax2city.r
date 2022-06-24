@@ -44,5 +44,7 @@ v2c.optimize = function(P=NULL){
   return(optimize(obj.fun,c(0,1))$minimum)
 }
 
-grid = grid.run()
-plot.grid(grid,x='x0.ei.A',y='R0.A',z='opt.vax.x.A',facet='asso.city~x.A'); plot.save('grid',w=8,h=7)
+v2c,examples()
+# grid = grid.run() # run once
+grid = grid.clean(grid.rdata())
+plot.grid(grid,x='x0.ei.A.pct',y='R0.AvB',z='opt.vax.x.A',facet='f.mix.city ~ f.X.AvB'); plot.save('grid',w=8,h=7)
