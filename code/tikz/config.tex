@@ -1,0 +1,33 @@
+\usepackage{newtxsf}
+\usepackage[sfdefault]{gandhi}
+\usepackage[italic]{mathastext}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\newlength{\dx}\setlength{\dx}{4em}
+\tikzset{
+  state/.style = {
+    draw = #1,
+    fill = #1!20!white,
+    rounded corners = .5em,
+    minimum width = \dx,
+    minimum height = \dx,
+    inner sep = 0em,
+    text width = \dx,
+    align = center,
+  },
+  arrow/.style = {
+    line width = .1em,
+    draw = #1,
+  },
+  arrow/.default = {black},
+}
+\definecolor{P}{HTML}{660066}
+\definecolor{Ah}{HTML}{D53E4F}
+\colorlet   {Al}{Ah!50!white}
+\definecolor{Bh}{HTML}{3288BD}
+\colorlet   {Bl}{Bh!50!white}
+\definecolor{S}{HTML}{0099FF}
+\definecolor{V}{HTML}{00CC99}
+\definecolor{E}{HTML}{FF9900}
+\definecolor{I}{HTML}{FF3300}
+\definecolor{R}{HTML}{CC0099}

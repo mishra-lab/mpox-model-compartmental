@@ -1,0 +1,14 @@
+\setlength{\dx}{2.5em}
+\newcommand{\rate}[1]{#1}
+\begin{tikzpicture}[x=1\dx,y=1\dx,arrow/.append style = {-latex}]
+  \node[state=S] (s) at (0,2) {$S$};
+  \node[state=V] (v) at (0,0) {$V$};
+  \node[state=E] (e) at (2,2) {$E$};
+  \node[state=I] (i) at (4,2) {$I$};
+  \node[state=R] (r) at (6,2) {$R$};
+  \draw[arrow] (s) -- node[right]{\rate{$\nu$}} (v);
+  \draw[arrow] (s) -- node[above]{\rate{$\lambda$}} (e);
+  \draw[arrow] (v) -- node[below right]{\rate{$(1-f)\lambda$}} (e);
+  \draw[arrow] (e) -- node[above]{\rate{$\sigma$}} (i);
+  \draw[arrow] (i) -- node[above]{\rate{$\gamma$}} (r);
+\end{tikzpicture}
