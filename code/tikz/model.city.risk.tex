@@ -1,15 +1,17 @@
 \setlength{\dx}{4em}
-\begin{tikzpicture}[x=1\dx,y=1\dx,arrowx/.style = {arrow,draw=black!#1!white,latex-latex}]
-  \node[state=Al] (al) at (0,0) {City A\\Low R};
-  \node[state=Bl] (bl) at (2,0) {City B\\Low R};
-  \node[state=Ah] (ah) at (0,2) {City A\\High R};
-  \node[state=Bh] (bh) at (2,2) {City B\\High R};
-  \draw[arrowx=065] (ah) -- (al);
-  \draw[arrowx=065] (bh) -- (bl);
-  \draw[arrowx=035] (ah) -- (bh);
-  \draw[arrowx=035] (al) -- (bl);
-  \draw[arrowx=010] (ah) -- (bl);
-  \draw[arrowx=010] (bh) -- (al);
+\begin{tikzpicture}[x=1\dx,y=1\dx,
+    state/.append style = {font=\small},
+    arrowx/.style = {arrow,draw=black!#1!white,latex-latex},]
+  \node[state=Al] (al) at (0,0) {City A\\Lower R};
+  \node[state=Bl] (bl) at (2,0) {City B\\Lower R};
+  \node[state=Ah] (ah) at (0,2) {City A\\Higher R};
+  \node[state=Bh] (bh) at (2,2) {City B\\Higher R};
+  \draw[arrowx=050] (ah) -- (al);
+  \draw[arrowx=050] (bh) -- (bl);
+  \draw[arrowx=020] (ah) -- (bh);
+  \draw[arrowx=020] (al) -- (bl);
+  \draw[arrowx=005] (ah) -- (bl);
+  \draw[arrowx=005] (bh) -- (al);
   \draw[arrowx=100] (ah.090) arc (360:630:2em);
   \draw[arrowx=100] (bh.000) arc (270:540:2em);
   \draw[arrowx=100] (al.180) arc (450:720:2em);
