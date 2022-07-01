@@ -1,38 +1,21 @@
-source('utils/utils.r')
-source('model/params.r')
-source('model/system.r')
-source('model/output.r')
-source('model/plot.r')
-source('model/grid.r')
+colours.city = .get.brewer(11)[c(2,10)]
+colours.city.risk = c(unname(c(colours.city,sapply(colours.city,colour.adj,.5))),'#000000')
 
-city.colours = .get.brewer(11)[c(2,10)]
-
-v2c.examples = function(){
-  # plot some outputs (incidence, cum.infections) for a few selected conditions & vax allocations
-  t = def.t()
-  P.list = list(
-    'default-100A' = def.params()
-  )
-  for (case in names(P.list)){
-    P = P.list[[case]]
-    R = sys.run(P,t)
-    outs = do.call(rbind,list(
-      out.incidence(R,mode='rate',   strat=c('city','risk')),
-      out.incidence(R,mode='cum.abs',strat=c('city','risk'))
-    ))
-    out.names = unique(outs$name)
-    outs$name = factor(outs$name,levels=out.names,labels=.out.labs[out.names])
-    g = plot.out(outs,color='city',linetype='risk',ylabel=NULL) +
-      facet_wrap('name',scales='free_y') +
-      scale_color_manual(values=city.colours) +
-      labs(color='City',linetype='Risk') +
-      show.vax(P)
-    plot.save(paste0('eg-',case),w=7,h=3)
-  }
+city.risk.factor = function(x){
+  # generate a factor from the interaction of city & risk (plus overall)
+  factor(interaction(x$city,x$risk),
+    levels = c('A.high','B.high','A.low','B.low','A B.high low'),
+    labels = c(
+      'City A Higher Risk',
+      'City B Higher Risk',
+      'City A Lower Risk',
+      'City B Lower Risk',
+      'Overall'))
 }
 
-v2c.optimize = function(P=NULL){
+v2c.optimize = function(P=NULL,force=NULL){
   # find the optimal allocation of vaccines between cities A & B
+  # option to force (dummy optimization) to easily obtain the same output for a non-optimal value
   if (is.null(P)){ P = def.params() }
   t = def.t()
   obj.fun = function(x){
@@ -41,10 +24,61 @@ v2c.optimize = function(P=NULL){
     R = sys.run(P,t)
     out.incidence(R,mode='cum.abs',strat=NULL)$value[length(t)]
   }
-  return(optimize(obj.fun,c(0,1))$minimum)
+  if (is.null(force)){
+    return(rename.cols(optimize(obj.fun,c(0,1)),minimum='vax.x.A',objective='cum.inf'))
+  } else {
+    return(list(vax.x.A=force,cum.inf=obj.fun(force)))
+  }
 }
 
-v2c,examples()
-# grid = grid.run() # run once
-grid = grid.clean(grid.rdata())
-plot.grid(grid,x='x0.ei.A.pct',y='R0.AvB',z='opt.vax.x.A',facet='f.mix.city ~ f.X.AvB'); plot.save('grid',w=8,h=7)
+v2c.plot.vax = function(){
+  # plot coverage & numbers of vaccine allocated for an example strategy and set of conditions
+  t = def.t()
+  P = def.params(X0.ei=0,x.A=.5,vax.x.A=.8)
+  R = sys.run(P,t)
+  outs = do.call(rbind,list(
+    out.prevalence(R,mode='prop',health='vax',strat=c('city','risk')),
+    out.prevalence(R,mode='prop',health='vax',strat=NULL),
+    out.prevalence(R,mode='abs', health='vax',strat=c('city','risk')),
+    out.prevalence(R,mode='abs', health='vax',strat=NULL)
+  ))
+  outs$city.risk = city.risk.factor(outs)
+  outs$name = factor(outs$name,levels=unique(outs$name),labels=c('Coverage (%)','Count'))
+  g = plot.out(outs,color='city.risk',linetype='city.risk',ylabel=NULL) +
+    facet_wrap('name',scales='free_y') +
+    scale_color_manual(values=colours.city.risk) +
+    scale_linetype_manual(values=c('solid','solid','62','62','22')) +
+    labs(color='City & Risk',linetype='City & Risk') +
+    show.vax(P)
+  plot.save('vax',w=8,h=3)
+}
+
+v2c.plot.incidence = function(mode='cum.abs'){
+  # plot incidence (cum.abs, rate, etc.) for three strategies for a set of conditions
+  # faceting & coloured by city.risk, linetype by strategy
+  P.list = list(
+    'No Vaccine'   = def.params(P=def.params.torott(),vax.X=0),
+    'Proportional' = def.params(P=def.params.torott(),vax.x.A=.75),
+    'Optimal'      = def.params(P=def.params.torott(),vax.x.A='opt'))
+  t = def.t()
+  outs = do.call(rbind,lapply(names(P.list),function(case){
+    P = P.list[[case]]
+    R = sys.run(P,t)
+    outs = do.call(rbind,list(
+      out.incidence(R,mode=mode,strat=c('city','risk')),
+      out.incidence(R,mode=mode,strat=NULL)
+    ))
+    outs$case = case
+    return(outs)
+  }))
+  outs$case  = factor(outs$case,levels=names(P.list))
+  outs$city.risk = city.risk.factor(outs)
+  g = plot.out(outs,linetype='case',color='city.risk') +
+    facet_wrap('city.risk',ncol=2,scales='free_y') +
+    labs(linetype='Vaccine\nStrategy') +
+    scale_linetype_manual(values=c('22','62','solid')) +
+    scale_color_manual(values=colours.city.risk,guide='none') +
+    show.vax(P.list[[1]]) +
+    theme(legend.position=c(.75,.15),legend.box='horizontal')
+  plot.save(paste0('inf.',mode),w=6,h=6)
+}

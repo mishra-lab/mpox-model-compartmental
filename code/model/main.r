@@ -3,12 +3,12 @@ source('model/params.r')
 source('model/system.r')
 source('model/output.r')
 source('model/plot.r')
+source('model/vax2city.r')
 
-t = def.t(t1=150)
-P = def.params()
-R = sys.run(P,t)
-g = plot.out(out.prevalence(R,health='vax',  strat=c('city','risk')),color='city',linetype='risk') + show.vax(P); print(g)
-g = plot.out(out.prevalence(R,health='inf',  strat=c('city','risk')),color='city',linetype='risk') + show.vax(P); print(g)
-g = plot.out(out.incidence(R,mode='abs',     strat=c('city','risk')),color='city',linetype='risk') + show.vax(P); print(g)
-g = plot.out(out.incidence(R,mode='rate',    strat=c('city','risk')),color='city',linetype='risk') + show.vax(P); print(g)
-g = plot.out(out.incidence(R,mode='cum.abs', strat=c('city','risk')),color='city',linetype='risk') + show.vax(P); print(g)
+v2c.main = function(){
+  v2c.plot.vax()
+  v2c.plot.incidence('cum.abs')
+  v2c.plot.incidence('rate')
+}
+
+v2c.main()

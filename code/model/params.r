@@ -7,7 +7,7 @@ source('utils/stats.r')
   health  = c('sus','vax','exp','inf','rec')
 )
 
-def.t = function(t0=0,t1=150,dt=1){
+def.t = function(t0=0,t1=120,dt=1){
   # wrapper function (mainly for default values)
   return(seq(t0,t1,dt))
 }
@@ -72,9 +72,22 @@ def.params.cond = function(P){
   # DEBUG print(rowSums(P$C.sex,dim=2)) == P$C.sex.city.risk)
   # DEBUG print(rowSums(P$C.com,dim=2)) == P$C.com.city.risk)
   P$health.sus = array(c(1,1-P$vax.eff),dimnames=list(health=c('sus','vax')))
+  P$X0 = def.X0(P)
+  if (P$vax.x.A == 'opt'){ P$vax.x.A = v2c.optimize(P)$vax.x.A }
   P$vax.x.city = c('A'=P$vax.x.A,'B'=1-P$vax.x.A)
   P$X.vax.city.risk = def.vax.city.risk(P)
-  P$X0 = def.X0(P)
+  return(P)
+}
+
+def.params.torott = function(){
+  P = list()
+  P$X   = 80000 + 20000
+  P$x.A = .75
+  P$x0.ei.A       = 1.00
+  P$C.sex.high.A  = .236 # R0 = 2.0
+  P$C.sex.high.B  = .178 # R0 = 1.5
+  P$asso.city = .9
+  P$vax.x.A = 'opt'
   return(P)
 }
 
