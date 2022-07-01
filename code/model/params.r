@@ -12,20 +12,16 @@ def.t = function(t0=0,t1=150,dt=1){
   return(seq(t0,t1,dt))
 }
 
-def.params.n = function(n){
-  # wrapper to create a list of parameter sets
-  return(lapply(seq(n),def.params))
-}
-
-def.params = function(seed=NULL,...){
-  P = list()
-  P = def.params.fixed(P)
-  P = list.update(P,...) # override any fixed or fitted
+def.params = function(P=list(),...){
+  # both P and/or ... can be used to override any defaults in P.fixed
+  P.fixed = def.params.fixed()
+  P = list.update(list.merge(P.fixed,P),...)
   P = def.params.cond(P)
   return(P)
 }
 
-def.params.fixed = function(P){
+def.params.fixed = function(){
+  P = list()
   # population
   P$X             = 100000 # total population size
   P$x.A           =   0.50 # proportion of total population in city A
