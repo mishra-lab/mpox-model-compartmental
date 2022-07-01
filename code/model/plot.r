@@ -32,7 +32,15 @@ library('ggplot2')
 .plot.clean = function(g){
   # apply some common adjustments
   g + theme_light() +
-    theme(strip.background=element_rect(fill='gray50'))
+    theme(strip.background=element_rect(fill='gray90'),strip.text = element_text(color='black'))
+}
+
+.facet.letters = function(data,x,y,fh,fv,pos=c(.1,.9),...){
+  data.lab = setNames(expand.grid(unique(data[[fh]]),unique(data[[fv]])),c(fh,fv))
+  data.lab$x = quantile(data[[x]],pos[1])
+  data.lab$y = quantile(data[[y]],pos[2])
+  data.lab$lab = letters[1:nrow(data.lab)]
+  return(geom_text(data=data.lab,aes(label=lab,x=x,y=y,...)))
 }
 
 plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
@@ -59,7 +67,7 @@ show.vax = function(P){
   annotate('rect',xmin=P$vax.t0,xmax=P$vax.t0+P$vax.dt,ymin=-Inf,ymax=Inf,alpha=.15)
 }
 
-plot.save = function(...,w=4,h=3){
+plot.save = function(...,ext='.pdf',w=4,h=3){
   # save a plot to default directory
-  ggsave(paste0(root.path('out','fig','model',...,create=TRUE),'.pdf'),w=w,h=h)
+  ggsave(paste0(root.path('out','fig','model',...,create=TRUE),ext),w=w,h=h)
 }
