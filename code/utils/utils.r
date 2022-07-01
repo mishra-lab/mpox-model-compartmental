@@ -31,6 +31,21 @@ list.update = function(x,...){
   return(x)
 }
 
+list.merge = function(...){
+  args = list(...)
+  x = args[[1]]
+  for (arg in args[2:length(args)]){
+    for (name in names(arg)){
+      x[[name]] = arg[[name]]
+    }
+  }
+  return(x)
+}
+
+list.prefix = function(x,pre){
+  return(setNames(x,paste0(pre,names(x))))
+}
+
 ci.to.q = function(ci){
   # e.g. ci=.95 -> c(.025,.975)
   return(c((1-ci)/2,1-(1-ci)/2))
