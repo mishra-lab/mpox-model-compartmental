@@ -50,3 +50,11 @@ ci.to.q = function(ci){
   # e.g. ci=.95 -> c(.025,.975)
   return(c((1-ci)/2,1-(1-ci)/2))
 }
+
+colour.adj = function(col,f=0){
+  col.rgb = col2rgb(col)
+  if (f == 0){ col.adj = col.rgb }
+  if (f <  0){ col.adj = col.rgb * (1 + f) }
+  if (f >  0){ col.adj = col.rgb + (255 - col.rgb) * f }
+  return(do.call(rgb,c(as.list(col.adj),maxColorValue=255)))
+}
