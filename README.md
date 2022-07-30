@@ -1,1 +1,1 @@
-# monkeypox-model
+# mpox compartmental model
