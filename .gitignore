@@ -2,6 +2,9 @@
 .debug/
 .tmp/
 .raw/
+.private/
+.rdata/
+.sub/
 
 # python
 __pycache__/
