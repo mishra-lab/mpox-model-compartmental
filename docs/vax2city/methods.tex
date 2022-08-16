@@ -1,0 +1,91 @@
+\section{Methods}
+We constructed a deterministic compartmental SVEIR
+(susceptible, vaccinated, exposed, infectious, recovered)
+model of monkeypox transmission.
+The modelled population aimed to represent the Ontario GBMSM community,
+and included two levels of sexual risk (higher, lower)
+and two weakly connected transmission networks (cities A, B).
+Figure~\ref{fig:model.city.risk} illustrates the modelled city/risk strata,
+Figure~\ref{fig:model.sveir} illustrates the SVEIR health states, and
+Table~\ref{tab:model.params} summarizes the default model parameters.
+\par
+\begin{figure}
+  \begin{subfigure}[b]{0.49\linewidth}
+    \centerline{\includegraphics[scale=1]{model.city.risk}}
+    \caption{Cities, risk groups, and contact networks}
+    \label{fig:model.city.risk}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.49\linewidth}
+    \centerline{\includegraphics[scale=1]{model.sveir}}
+    \vskip3em
+    \caption{Health states and transitions}
+    \label{fig:model.sveir}
+  \end{subfigure}
+  \caption{Model structure}
+  \label{fig:model}
+  \floatfoot
+  (\subref{fig:model.city.risk})
+  High/Low R: risk groups;
+  arrow opacity is proportional to contact network connectivity between groups.
+  (\subref{fig:model.sveir})
+  $S$:~susceptible;
+  $V$:~vaccinated;
+  $E$:~exposed;
+  $I$:~infectious;
+  $R$:~recovered.
+  See Table~\ref{tab:notation} and Appendix~\ref{app.model} for rate definitions.
+\end{figure}
+\begin{table}
+  \centering
+  \caption{Model parameters, including default values and ranges explored via grid sweep}
+  \label{tab:model.params}
+  \input{tab.model.params}
+\end{table}
+\par
+We initialized all model runs with 10 imported/seed cases,
+distributed across the exposed and infectious stages proportionally by mean stage duration.
+We then simulated distribution of 5000 vaccine doses over 15 days from day 60,
+doses that were imperfectly prioritized to the higher risk group with 90\% sensitivity
+--- i.e. 4500 doses reach the higher risk group and 500 each the low risk group.
+\par
+Using this model, we explored optimal vaccine allocation between cities A~and~B
+over a range of epidemic conditions.
+For a given set of conditions, we defined the optimal vaccine allocation as that which
+resulted in the fewest cumulative infections by day 120 in both cities.
+\par
+We chose this 60-day time horizon and fixed 5000 vaccine doses to reflect
+a plausible medium-term optimization problem relevant to the early monkeypox situation in Ontario.
+In reality, multiple changing time horizons may require consideration,
+different numbers of doses may become available, and
+different rates of vaccination may be possible.
+We aimed to obtain generalizeable insights about the relationships between
+specific epidemic conditions and efficient geographic prioritization of vaccines during an outbreak.
+\par
+As one specific example setting, we chose parameters representative of
+Toronto (city~A) and another medium-sized Ontario city (city~B).
+Based on 
+\dots
+80,000 and 20,000 GBMSM population size, respectively.
+\dots
+10\% sexual network connectivity ($\epsilon_c = 0.9$).
+\dots
+$R_0$ = 2.0 in Toronto versus 1.5 in city~B.
+\dots
+100\% imported/seed cases in Toronto.
+\dots
+We then compared two strategies of vaccine allocation by city:
+(a) proportional to population size;
+(b) fewest infections by day 120.
+\par
+Additionally we performed a ``grid sweep'' of the following epidemic conditions,
+and identified the optimal vaccine allocation between cities A and B for each combination of conditions:
+\begin{itemize}
+  \item relative size of city A versus B (1/4~to~4 times)
+  \item relative epidemic potential in city~A ($R_0$ in city~A from 1~to~2, versus fixed 1.5 in city~B),%
+  \footnote{City-specific $R_0$ calculated assuming no inter-city mixing.}
+        adjusted via the sexual activity of the higher risk group in the city~A
+  \item between-city mixing (0~to~30\% of all contacts formed randomly between cities)
+  \item fraction of imported/seed cases in city A versus B (0--100\%)
+\end{itemize}
+
+

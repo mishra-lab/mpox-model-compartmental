@@ -1,0 +1,35 @@
+\small
+\begin{tabular}{llrcc}
+  \toprule
+  Parameter                          & Stratum                   &      Value &      Range       & Ref \\
+  \midrule
+  Population size                    & overall                   &    100,000 &                  &     \\
+                                     & fraction in city A        &        .50 &    [.20,~.80]    &     \\
+  Fraction higher risk               & city A                    &        .10 & [.01,~.50]\tn{a} &     \\
+                                     & city B                    &        .10 &                  &     \\[1ex]
+  Contact rate                       & non-sexual, everybody     &          1 &                  &     \\
+                                     & sexual, low risk          &        .01 &                  &     \\
+                                     & sexual, high risk, city A & .178\tn{b} & [.10,~.25]\tn{a} &     \\
+                                     & sexual, high risk, city B & .178\tn{b} &                  &     \\[1ex]
+  Assortativity                      & cities, all contacts      &        .90 &    [.70,~1.0]    &     \\
+                                     & risk, non-sexual          &          0 &                  &     \\
+                                     & risk, sexual              &        .50 &                  &     \\
+  Per-contact SAR                    & non-sexual                &        .05 &                  &     \\
+                                     & sexual                    &        .90 &                  &     \\[1ex]
+  Initial infections                 & overall                   &         10 &                  &     \\
+                                     & fraction in city A        &        .50 &    [0.0,~1.0]    &     \\[1ex]
+  Duration of period                 & latent/incubation         &          7 &                  &     \\
+                                     & infectious/symptoms       &         21 &                  &     \\
+  Fraction isolated among infected   &                           &        .50 &                  &     \\[1ex]
+  Vaccines available                 &                           &       5000 &                  &     \\
+  Vaccine effectiveness              &                           &        .85 &                  &     \\
+  Vaccine prioritization sensitivity & high risk                 &        .90 &                  &     \\
+  Vaccine allocation                 & city A                    &        .50 & [0.0,~1.0]\tn{c} &     \\
+  \bottomrule
+\end{tabular}
+\floatfoot
+All durations in days; all rates in per-day.
+SAR: secondary attack rate.
+\tnt[a]{Calculated to fit $R_0 \in [1,2]$.}
+\tnt[b]{Calculated to fit $R_0 = 1.5$.}
+\tnt[c]{Optimized parameter.}

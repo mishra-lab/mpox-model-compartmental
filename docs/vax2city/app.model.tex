@@ -1,0 +1,90 @@
+\section{Model Details}\label{app.model}
+Table~\ref{tab:notation} summarizes the notation used.
+\begin{table}[h]
+  \centering
+  \caption{Notation}
+  \label{tab:notation}
+  \input{tab.notation}
+\end{table}
+\subsection{Differential Equations}\label{app.model.eqn}
+Equation~\eqref{eq:ode} summarizes the system of differential equations for the SVEIR health states;
+each equation is repeated for each combination of city~$c$ (A,~B) and risk group~$r$ (high,~low) (4 total),
+but we omit the $cr$ index notation for clarity.
+\begin{subequations}\label{eq:ode}
+  \begin{alignat}{5}
+    \frac{d}{dt}&S   &&= - \nu S - \lambda S \\
+    \frac{d}{dt}&V   &&= + \nu S - (1 - f) \lambda V \\
+    \frac{d}{dt}&E   &&= + \lambda S + (1-f) \lambda V - \sigma E\\
+    \frac{d}{dt}&\,I &&= + \sigma E - \gamma I \\
+    \frac{d}{dt}&R   &&= + \gamma I
+  \end{alignat}
+\end{subequations}
+\subsection{Incidence Rate}\label{app.model.inc}
+The incidence rate (force of infection) for
+non-vaccinated susceptible individuals in city $c$ and risk group $r$ (``group $cr$'') is defined as:
+\begin{equation}
+  \lambda_{cr} = \sum_{yc'r'} (1 - \rho)\,\beta_{y}\,C_{ycr}\,\Phi_{ycrc'r'} \frac{I_{c'r'}}{N_{c'r'}}
+\end{equation}
+where:
+$\rho$ is the proportion isolating among infectious;
+$\beta_{y}$ is the transmission probability per type-$y$ contact;
+$C_{ycr}$ is the type-$y$ contact rate among group $cr$;
+$\Phi_{ycrc'r'}$ is the probability of type-$y$ contact formation with group $c'r'$ among group $cr$; and
+$N_{cr}$ is the size of group $cr$.
+\par
+Among vaccinated, the incidence rate is simply reduced by a factor $(1-f)$, where
+$f$ is the vaccine effectiveness (take-type).
+\subsection{Mixing}\label{app.model.mix}
+Mixing between risk groups and cities was implemented using
+an adaptation of a common approach \cite{Nold1980,Garnett1994}.
+We denote the total contacts ``offered'' by group~$cr$ as: $Q_{cr} = N_{cr} C_{cr}$;
+and denote the margins $Q_{c} = \sum_{r}Q_{cr}$; $Q_{r} = \sum_{c} Q_{cr}$; and $Q = \sum_{cr}Q_{cr}$.
+The probability of contact formation with group $c'r'$ among group $cr$ is defined as:
+\begin{equation}
+  \Phi_{crc'r'} =
+    \epsilon_c \delta_{cc'} \left(
+      \epsilon_r \delta_{rr'} + (1 - \epsilon_r) \frac{Q_{c'r'}}{Q_{c'}}
+    \right) +
+    (1 - \epsilon_{c}) \frac{Q_{c'}}{Q} \left(
+      \epsilon_r \delta_{rr'} + (1 - \epsilon_r) \frac{Q_{r'}}{Q}
+    \right)
+\end{equation}
+where:
+$\delta_{ii'} = \{1~\text{if}~i = i'; 0~\text{if}~i \ne i'\}$ is an identity matrix; and
+$\epsilon_{c}, \epsilon_{r} \in [0,1]$ are assortativity parameters
+for mixing among cities and risk groups, respectively, such that
+$\epsilon = 1$ yields complete group separation and
+$\epsilon = 0$ yields completely random (proportionate) mixing.
+For clarity, we omit the index of contact type $y$,
+although $\epsilon_r$, $C_{cr}$ and thus $\Phi_{crc'r'}$ are all further stratified by $y$.
+\subsection{City $R_0$}\label{app.model.R0}
+The basic reproduction number $R_0$ for each city was defined
+in the absence of vaccination and ignoring between-city mixing --- i.e. with $\epsilon_c = 1$.
+Following \cite{Diekmann1990}, we define $R_0$ as
+the dominant eigenvalue of the city-specific next generation matrix $K$;
+matrix elements $K_{rr'}$ are defined as:
+\begin{equation}
+  K_{rr'} = (1 - \rho) \sum_{y} \beta_{y} C_{yr} \Phi_{yrr'} \frac{N_{r}} {N_{r'}} \gamma^{-1}
+\end{equation}
+where:
+$\rho$ is the proportion isolating among infectious;
+$\beta_{y}$ is the transmission probability per type-$y$ contact;
+$C_{yr}$ is the type-$y$ contact rate among group $r$;
+$\Phi_{yrr'}$ is the probability of type-$y$ contact formation with group $r'$ among group $r$;
+$N_{r}$ is the size of group $r$; and
+$\gamma^{-1}$ is the duration of infectiousness.
+\subsection{Vaccine Allocation}\label{app.model.vax}
+Vaccination is modelled as distribution of 5000 doses over 15 days from day 60 (333 doses per day).
+Vaccines are prioritized to the high risk group with 90\% sensitivity, such that
+4500 doses actually reach the high risk group, and
+500 doses are given to the lower risk group.
+Figure~\ref{fig:prev.vax} illustrates vaccination coverage/counts by city/risk group
+for an example allocation of 80\% to city~A and 20\% to city~B.
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{prev.vax}
+  \caption{Example vaccine allocation: 80\% to city~A, and 90\% to high risk group}
+  \label{fig:prev.vax}
+  \floatfoot
+  Gray bar indicates period of vaccine roll-out (days 60--75)
+\end{figure}
+

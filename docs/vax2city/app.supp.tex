@@ -1,0 +1,57 @@
+\section{Supplemental Results}
+% Figure~\ref{fig:inf.default}
+% Figure~\ref{fig:grid.dci.none}
+% Figure~\ref{fig:grid.rdci.none}
+% Figure~\ref{fig:grid.dci.prop}
+% Figure~\ref{fig:grid.rdci.prop}
+\begin{figure}[h]
+  \begin{subfigure}{\linewidth}
+    \includegraphics[width=\linewidth]{inf.default.none}
+    \caption{100\% city~A}
+    \label{fig:inf.default.none}
+  \end{subfigure}
+  \begin{subfigure}{\linewidth}
+    \includegraphics[width=\linewidth]{inf.default.100a}
+    \caption{100\% city~A}
+    \label{fig:inf.default.100a}
+  \end{subfigure}
+  \begin{subfigure}{\linewidth}
+    \includegraphics[width=\linewidth]{inf.default.opt}
+    \caption{Optimal: 50\% city~A, 50\% city~B}
+    \label{fig:inf.default.opt}
+  \end{subfigure}
+  \caption{Modelled monkeypox incidence and cumulative infections
+    in cities A and B with default parameters,
+    under two different vaccine allocation scenarios}
+  \label{fig:inf.default}
+  \floatfoot
+  Gray bar indicates period of vaccine roll-out (days 60--75).
+\end{figure}
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{grid.dci.none.pdf}
+  \caption{Absolute fewer infections under optimal vaccine allocation
+    versus no vaccination}
+  \label{fig:grid.dci.none}
+  \floatfoot\gridfoot
+\end{figure}
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{grid.rdci.none.pdf}
+  \caption{Relative fewer infections under optimal vaccine allocation
+    versus no vaccination}
+  \label{fig:grid.rdci.none}
+  \floatfoot\gridfoot
+\end{figure}
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{grid.dci.prop.pdf}
+  \caption{Absolute fewer infections under optimal vaccine allocation
+    versus allocation proportional to city size}
+  \label{fig:grid.dci.prop}
+  \floatfoot\gridfoot
+\end{figure}
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{grid.rdci.prop.pdf}
+  \caption{Relative fewer infections under optimal vaccine allocation
+    versus allocation proportional to city size}
+  \label{fig:grid.rdci.prop}
+  \floatfoot\gridfoot
+\end{figure}
