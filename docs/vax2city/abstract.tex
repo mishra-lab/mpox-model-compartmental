@@ -1,1 +1,38 @@
-TODO
+\renewcommand{\emph}[1]{\textbf{\textsc{\MakeLowercase{#1}}}}
+\emph{Background.}
+In the current global monkeypox outbreak,
+many jurisdictions have been faced with limited vaccine supply,
+motivating interest in efficient allocation.
+We sought to explore optimal vaccine allocation between two linked transmission networks
+over a short-term time horizon, across a range of epidemic conditions.
+\emph{Methods.}
+We constructed a deterministic compartmental SVEIR model of monkeypox transmission.
+We parameterized the model to reflect
+two representative, weakly connected \GBMSM sexual networks (cities) in Ontario.
+We simulated roll-out of 5000 vaccine doses over 15 days,
+starting 60 days after epidemic seeding by 10 imported cases.
+Within this model, we varied:
+the relative city (network) sizes,
+epidemic potentials ($R_0$),
+between-city mixing,
+and distribution of imported/seed cases between cities.
+In each context (combination of varied factors),
+we then identified the ``optimal'' allocation of doses between cities
+--- resulting in the fewest infections overall by day 120.
+\emph{Results.}
+Under our modelling assumptions, we found that a fixed supply of vaccines
+could generally avert more infections over short-term time horizons when prioritized to:
+a larger transmission network,
+a network with more initial infections, and
+a network with greater $R_0$.
+Greater between-city mixing decreased the influence of initial seed cases, and
+increased the influence of city $R_0$ on optimal allocation.
+Under mixed conditions (e.g. fewer seed cases but greater $R_0$),
+optimal allocation saw doses shared between cities,
+suggesting that proximity-based and risk-based vaccine prioritization
+can work in combination to minimize transmission.
+\emph{Interpretation.}
+Prioritization of limited vaccine supply based on network-level risk factors
+can help minimize transmission during an emerging epidemic.
+Such prioritization should be grounded in an understanding of context-specific drivers of risk,
+and should acknowledge the potential connectedness of multiple transmission networks.
