@@ -11,15 +11,10 @@
 \usepackage[
   style=numeric-comp,
   doi=false,
-  url=false,
-  isbn=false,
-  eprint=false,
+  url=true,
   natbib=true,
   backend=biber,
   sorting=none,
-  maxbibnames=3,
-  minbibnames=3,
-  giveninits=true,
 ]{biblatex}
 \renewcommand{\bibfont}{\small}
 \DeclareSourcemap{\maps[datatype=bibtex]{

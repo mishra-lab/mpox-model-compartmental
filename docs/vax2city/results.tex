@@ -15,7 +15,7 @@ However, this approach can still avert more infections overall over shorter time
 after which more doses may become available.
 Figure~\ref{fig:inf.default} illustrates the opposite case
 (default model parameters in Table~\ref{tab:model.params}): two identical cities with equal seeding,
-where the optimal allocation is equal between cities.
+where the optimal allocation is, unsurprisingly, equal between cities.
 \begin{figure}[h]
   \begin{subfigure}{\linewidth}
     \includegraphics[width=\linewidth]{inf.toroth.none}
@@ -59,8 +59,8 @@ it was best to allocate most/all doses to that city in our analysis
 \par
 For smaller cities with large $R_0$ and the majority of seed cases,
 it was sometimes possible to vaccinate the entire higher risk group;
-in this case, the remaining doses were best allocated to the other city,
-yielding the plateaus (solid-colour triangles) in Figure~\ref{fig:grid.opt}:
+in this case, the remaining doses were best allocated to the higher risk group in the other city,
+yielding the plateaus (solid yellow triangles) in Figure~\ref{fig:grid.opt}:
 (a,d,g) upper right; (c,f,i) lower left.
 This plateau highlights how priority populations can change
 if/after high levels of coverage are achieved in other populations.
@@ -80,8 +80,10 @@ mainly acted to reduce the influence of initial seed cases,
 and increase the influence of $R_0$
 on optimal allocation of vaccines to each city;
 this finding is visible in Figure~\ref{fig:grid.opt} as
-stronger vertical gradients (contours are more horizontal) in (a,b,c) with more inter-city mixing, versus
-stronger horizontal gradients (contours are more vertical) in (g,h,i) with less inter-city mixing.
+stronger vertical gradients (contours are relatively more horizontal)
+in (a,b,c) with more inter-city mixing, versus
+stronger horizontal gradients (contours are relatively more vertical)
+in (g,h,i) with less inter-city mixing.
 \begin{figure}
   \includegraphics[width=\linewidth]{grid.opt.pdf}
   \caption{Optimal vaccine allocation between two cities under different epidemic conditions}

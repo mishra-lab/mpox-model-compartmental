@@ -1,12 +1,12 @@
 \section{Methods}
-We constructed a deterministic compartmental SVEIR
+We constructed a deterministic compartmental \SVEIR
 (susceptible, vaccinated, exposed, infectious, recovered)
-model of monkeypox transmission.
-The modelled population aimed to represent the Ontario GBMSM community,
+model of \MPXV transmission.
+The modelled population aimed to represent the Ontario \GBMSM community,
 and included two levels of sexual risk (higher, lower)
 and two weakly connected transmission networks (cities A, B).
 Figure~\ref{fig:model.city.risk} illustrates the modelled city/risk strata,
-Figure~\ref{fig:model.sveir} illustrates the SVEIR health states, and
+Figure~\ref{fig:model.sveir} illustrates the \SVEIR health states, and
 Table~\ref{tab:model.params} summarizes the default model parameters.
 \par
 \begin{figure}
@@ -54,7 +54,7 @@ For a given set of conditions, we defined the optimal vaccine allocation as that
 resulted in the fewest cumulative infections by day 120 in both cities.
 \par
 We chose this 60-day time horizon and fixed 5000 vaccine doses to reflect
-a plausible medium-term optimization problem relevant to the early monkeypox situation in Ontario.
+a plausible medium-term optimization problem relevant to the early \MPXV situation in Ontario.
 In reality, multiple changing time horizons may require consideration,
 different numbers of doses may become available, and
 different rates of vaccination may be possible.
@@ -65,7 +65,7 @@ As one specific example setting, we chose parameters representative of
 Toronto (city~A) and another medium-sized Ontario city (city~B).
 Based on 
 \dots
-80,000 and 20,000 GBMSM population size, respectively.
+80,000 and 20,000 \GBMSM population size, respectively.
 \dots
 10\% sexual network connectivity ($\epsilon_c = 0.9$).
 \dots
@@ -74,8 +74,10 @@ $R_0$ = 2.0 in Toronto versus 1.5 in city~B.
 100\% imported/seed cases in Toronto.
 \dots
 We then compared two strategies of vaccine allocation by city:
-(a) proportional to population size;
-(b) fewest infections by day 120.
+(a) proportional to population size; and
+(b) fewest infections by day 120.%
+\footnote{Optimal allocation was identified using the
+  \href{https://www.rdocumentation.org/link/optimize?package=stats}{\texttt{optimize}} function in R.}
 \par
 Additionally we performed a ``grid sweep'' of the following epidemic conditions,
 and identified the optimal vaccine allocation between cities A and B for each combination of conditions:
