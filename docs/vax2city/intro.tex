@@ -1,30 +1,36 @@
 \section{Introduction}
-The emerging outbreak of monkeypox (MPXV) virus worlwide includes X cases in Canada as of X, 2022.
-Each jurisdiction, across countries and within Canada, are faced with a limited local supply of vaccines 
-which are being used to help reduce acquistion, infectivity, and/or modify disease severity. 
-Although data on vaccine efficacy against each mechanism (reduction in susceptibility, infectivity, disease severity) 
-remains limited at this stage, the pre-emptive use of vaccines within jurisdictions is being used to 
-try and limit onward transmission or MPXV spread within communities of gay, bisexual, and other 
-men who have sex with men (gbMSM) disproportionately affected by MPXV.
-Given the limited supply available to jurisdictions, it is well-established that 
-prioritizing a limited supply of vaccines
-to sub-populations who experience disproportionately higher 
-individual-level and network-level acquisition and transmission risks
-can maximize infections averted. % CITE: hotspot, cite other HIV/STI papers including Garnet herd immunity paper, etc
-Such networks may have different "densities" or characteristics that shape 
-the epidemic potential ($R_0$) of MPXV if it enters the network. A network's connectedness
-to other jurisdictions or networks further shape the chances and magnitude of imported cases
-by the time vaccine roll-out and allocation decisions begin. For example, within Canada and
-its regions, each jurisdiction faced decisions with a limited early supply of an emergent federal 
-stockpile of Immavune (R) % cite PHAC vaccine reports, etc.
-to prioritize cities for the first few weeks of its vaccine roll-out, pending additional supply.
+The emerging outbreak of monkeypox virus (\MPXV) worlwide includes
+1,059 cases in Canada as of 2022 August 12 \cite{PHAC2022epi}.
+Many jurisdictions, across countries and within Canada,
+are faced with a limited local supply of vaccines,
+which are being used to help reduce acquistion, infectivity, and/or disease severity.
+Although data on vaccine efficacy against each aspect (acquistion, infectivity, disease severity)
+remains limited at this stage \cite{Fine1988,PHAC2022imvamune,CDC2022vax},
+pre-emptive vaccination is being used to try to limit \MPXV spread
+within communities of gay, bisexual, and other men who have sex with men (\GBMSM),
+who are disproportionately affected by \MPXV.
 \par
-We sought to explore optimal allocation of a fixed supply of monkeypox vaccine
+It is well-established that prioritizing a limited supply of vaccines
+to sub-populations experiencing disproportionately higher risk
+--- individual-level and/or network-level acquisition and/or transmission risk ---
+can maximize infections averted \cite{Garnett2005,Mishra2021}.
+% CITE: hotspot, cite other HIV/STI papers including Garnet herd immunity paper, etc
+Such networks may have different ``densities'' or characteristics that shape
+the epidemic potential ($R_0$) of \MPXV, if it enters the network.
+A network's connectedness to other networks further shapes
+the chances and number of imported cases
+by the time vaccine allocation decisions and roll-out begin.
+For example, within Canada and its regions, many jurisdictions
+faced decisions about how to prioritize allocation of
+a limited emergency federal stockpile of Immavune\rtm \cite{PHAC2022imvamune}
+during the first few weeks of \MPXV outbreak, pending additional supply.
+\par
+We sought to explore optimal allocation of a fixed supply of \MPXV vaccine
 across two jurisdictions --- i.e. weakly connected transmission networks ---
 under different epidemic conditions.
 Specifically, we explored differences between two jurisdictions in:
-population size of gbMSM; epidemic potential ($R_0$); imported/seed cases;
-and connectedness of the two jurisdictions. % change terminology to jurisdictions throughout
-The goal of this modeling study was to produce fundamental and generalizable insights into 
-MPXV vaccine prioritization in the context of interconnected sexual networks, using ciites (jurisdictions) 
-within a province like Ontario, Canada as an example.
+population size of \GBMSM; epidemic potential ($R_0$); imported/seed cases;
+and connectedness of the two jurisdictions.
+The goal of this modeling study was to produce fundamental and generalizable insights into
+\MPXV vaccine prioritization in the context of interconnected sexual networks,
+using jurisdictions (cities) within a province like Ontario, Canada as an example.
