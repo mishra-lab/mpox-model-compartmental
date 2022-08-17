@@ -1,39 +1,65 @@
-\section{Discussion}  %Jesse - I really like this first para of discussion as some text to send to Betty if you can send that to Betty?
+\section{Interpretation}
 We sought to explore how different epidemic conditions
-could affect optimal allocation of a fixed supply of monkeypox vaccine
+could affect optimal allocation of a fixed supply of monkeypox virus (\MPXV) vaccine
 across two weakly connected transmission networks (e.g. cities or jurisdictions).
-Under our modelling assumptions, we found that
+Under our modelling assumptions, we found that:
 vaccines could generally avert more infections when prioritized to
 a larger network,
 a network with more initial infections, and
-a network with greater epidemic potential $R_0$
-defined by contact rates in a higher risk group.
+a network with greater epidemic potential ($R_0$).
 \par
-Although the study, for simplicity, centered on two interconnected networks, it highlights the 
-importance of measuring outcomes for an overall population by considering that a geography is comprised
-of interconnected networks (within its jurisdictional boundaries and between jurisdictions/cities). 
-That is, cities like Toronto and other across the province and Canada, and globally, are all connected; 
-alongside within-city differences in size and configuration of sexual networks and access to interventions/services. % refs
-In the first month following emergence of MPXV in Ontario, the province began its initial limited vaccine roll-out to 
-jurisdictions that had already detected cases, which was in Toronto - a jurisdiction that has the largest population size, 
-and some features (such as rates of bacterial sexually transmitted infections as a proxy) that suggest a potentially more dense sexual network, and greater epidemic potential for MPXV. % cite LHSTM paper re: dense/configuratin of sexual network given their use of degree deistribution with branching rocess model and MPXV
-Of note, although our model explicitly simulated epidemic potential on the basis of contact rates, access to interventions (for example, access to diagnoses and diagnostics, isolation support, etc.) can also shape epidemic potential. % cite
-Thus, the findings signal the importance of characterizing the "why" of epidemic potential across jurisdictions and communities, including participatory, community-based surveillance and research into the contexts that lead to disproportioante risks at a network-level (not just an individual-level). %cite: the nature perspective paper by Muge Cevik and Baral; Baral et al socio-ecological model of HIV, etc.
+Although our study, for simplicity, focused on two weakly-connected networks,
+it highlights the importance of measuring outcomes for a population overall,
+by considering that geographies are comprised of interconnected networks.
+That is, while cities across Canada, and globally,
+feature important within- and between-city differences
+in size and configuration of transmission networks \cite{},
+and in access to interventions/services \cite{},
+ultimately these cities remain connected with respect to transmission,
+and cannot be considered in isolation over longer time horizons \cite{}.
 \par
-Our findings are consistent with previous studies that confirm that prioritizing limited vaccine 
-supply/resources to communities or settings with the highest epidemic potential (shaped by 
-density and features of the contact network) genrally yield the greatest overall benefit for the 
-overall population. We also identified how other key factors, such as volume of imported cases and 
-interconnections between networks shape the optimal early vaccine roll-out. Although the study was situated
-in the context of GBMSM sexual networks in Ontario as an example, the findings have wider implications for vaccine roll-out globally. The absence of systematic vaccine supply and roll-out in countries and sub-national regions already endemic for MPXV outbreaks across West and Central Africa, and including (although not yet reported) in the context of GBMSM and sexual minorities, poses the largest threat to the control and mitigation of MPXV globally. %cite WHO, GAVI, etc. 
+Within such interconnected settings,
+our findings are consistent with previous studies which show that
+prioritizing limited vaccine supply/resources to communities or settings
+with the highest epidemic potential (shaped by density and other features of the contact network)
+generally yields the greatest benefit for the population overall
+\cite{Garnett2005,Anderson2014,Mishra2021}.
+We also identified how key factors,
+such as number of imported cases and connections between networks,
+shape efficient early vaccine roll-out.
+While our model parameterization reflected \GBMSM sexual networks in Ontario,
+our findings have wider implications for vaccine roll-out globally.
+The persistent absence of vaccine supply and roll-out in
+regions already endemic for \MPXV outbreaks across West and Central Africa,
+including (although not yet reported) in the context of \GBMSM and sexual minorities,
+poses the largest threat to the control and mitigation of \MPXV globally~\cite{}.
+% CITE WHO, GAVI, etc.
 \par
-\paragraph{Limitations}
-Our study was meant to provide fundametnal and generalizable findings, and thus
-restricted to a broad sensitivity analyses to idnetify the conditions that can shape 
-optimal vaccine allocation in a limited time, with very limited supply. One limitiation 
-of our study is that we used simple, compartmental models, with 2 dimensions of heterogeneity only; and 
-future work woudl benefit from individual-based sexual network models. Second, our study only examined
-two jurisdictions or networks, and additional stratifications (more jurisdictions/cities) could refine allocation further. 
-However, the general principles and insights from two jurisdictions would apply across multiple jurisdictions. 
+Prioritizing based on risk also requires understanding risk.
+Early vaccine roll-out in Ontario reached Toronto,
+where cases were already detected, the population size was large, and
+rates of bacterial sexually transmitted infections suggested
+a potentially denser sexual network and thus, greater epidemic potential \cite{Endo2022}.
+Our model implemented differential $R_0$ between cities via contact rates;
+however, epidemic potential may also be linked to intervention access,
+including access to diagnoses and isolation support \cite{}.
+Thus, our findings signal the importance of characterizing
+the drivers of epidemic potential across jurisdictions and communities,
+including participatory, community-based surveillance and research
+into the contexts that lead to disproportioante risks at a network-level,
+not just an individual-level \cite{Baral2013,Cevik2021}.
+% CITE: the nature perspective paper by Muge Cevik and Baral; Baral et al socio-ecological model of HIV, etc.
 \par
-% conclusion  TODO
+Our study aimed to provide fundamental and generalizable findings, and thus
+explored a broad sensitivity analysis to identify conditions that can shape
+optimal short-term vaccine allocation, with very limited supply.
+One limitiation of our study is that
+we used a simple compartmental model, with only two risk groups;
+future work would benefit from more nuanced representations of risk,
+for example, using individual-based sexual network models.
+Second, our study only examined two transmission networks (``cities'');
+incorporation of additional networks could yield more interesting prioritization findings.
+However, we expect that the general principles and insights from two networks
+would apply across multiple networks.
+\par
+Conclusion [TODO]
