@@ -8,6 +8,12 @@ and two weakly connected transmission networks (cities A, B).
 Figure~\ref{fig:model.city.risk} illustrates the modelled city/risk strata,
 Figure~\ref{fig:model.sveir} illustrates the \SVEIR health states, and
 Table~\ref{tab:model.params} summarizes the default model parameters.
+To parameterize the model, we drew on
+prior analyses of \GBMSM sexual networks in Canada \cite{Wang2021,Armstrong2020},
+and emerging \MPXV epidemiological data in the context of the current epidemic
+\cite{PHO2022synth,Adler2022,Thornhill2022,Charniga2022,Miura2022}.
+Appendix~\ref{app.model} provides additional details about
+the model implementation and parameterization.
 \par
 \begin{figure}
   \begin{subfigure}[b]{0.49\linewidth}
@@ -44,14 +50,19 @@ Table~\ref{tab:model.params} summarizes the default model parameters.
 \par
 We initialized all model runs with 10 imported/seed cases,
 distributed across the exposed and infectious stages proportionally by mean stage duration.
-We then simulated distribution of 5000 vaccine doses over 15 days from day 60,
-doses that were imperfectly prioritized to the higher risk group with 90\% sensitivity
---- i.e. 4500 doses reach the higher risk group and 500 each the low risk group.
+We then simulated distribution of 5000 vaccine doses over 15 days,
+60 days after initial cases were imported (though not necessarily detected).
+Doses were imperfectly prioritized to the higher risk group with 90\% sensitivity
+--- i.e. 4500 doses reach the higher risk group and 500 each the low risk group,
+reflecting early risk-based eligibility criteria in some jurisdictions \cite{TPH2022vax}.
 \par
 Using this model, we explored optimal vaccine allocation between cities A~and~B
 over a range of epidemic conditions.
 For a given set of conditions, we defined the optimal vaccine allocation as that which
-resulted in the fewest cumulative infections by day 120 in both cities.
+resulted in the fewest cumulative infections by day 120 in both cities.%
+\footnote{Optimal allocation was identified using the
+  \href{https://www.rdocumentation.org/link/optimize?package=stats}
+  {\texttt{optimize}} function in R.}
 \par
 We chose this 60-day time horizon and fixed 5000 vaccine doses to reflect
 a plausible medium-term optimization problem relevant to the early \MPXV situation in Ontario.
@@ -62,25 +73,22 @@ We aimed to obtain generalizable insights about the relationships between
 specific epidemic conditions and efficient geographic prioritization of vaccines during an outbreak.
 \par
 As one specific example setting, we chose parameters representative of
-Toronto (city~A) and another medium-sized Ontario city (city~B).
-Based on 
-\dots
-80,000 and 20,000 \GBMSM population size, respectively.
-\dots
-10\% sexual network connectivity ($\epsilon_c = 0.9$).
-\dots
-$R_0$ = 2.0 in Toronto versus 1.5 in city~B.
-\dots
-100\% imported/seed cases in Toronto.
-\dots
+Toronto (city~A) and another medium-sized Ontario city (city~B),
+with \GBMSM population sizes of 80,000 and 20,000, respectively,
+and 10\% sexual/social network connectivity ($\epsilon_c = 0.9$) \cite{Armstrong2020}.
+We also modelled $R_0$ = 2.0 in Toronto versus 1.5 in city~B,
+reflecting differences in sexual network density as suggested by differential prevalence of
+bacterial sexually transmitted infections across Ontario cities \cite{Gesink2014,Hart2021}.
+Finally, we simulated 100\% imported/seed cases in Toronto,
+reflecting early \MPXV case distribution in Ontario \cite{PHO2022ont}.
 We then compared two strategies of vaccine allocation by city:
 (a) proportional to population size; and
-(b) fewest infections by day 120.%
-\footnote{Optimal allocation was identified using the
-  \href{https://www.rdocumentation.org/link/optimize?package=stats}{\texttt{optimize}} function in R.}
+(b) ``optimal'' (fewest infections by day 120).
 \par
-Additionally we performed a ``grid sweep'' of the following epidemic conditions,
-and identified the optimal vaccine allocation between cities A and B for each combination of conditions:
+Next, we performed a ``grid sweep'' of the following epidemic conditions,
+and identified the optimal vaccine allocation between cities A and B
+for each combination of conditions:
+\clearpage % TEMP
 \begin{itemize}
   \item relative size of city A versus B (1/4~to~4 times)
   \item relative epidemic potential in city~A ($R_0$ in city~A from 1~to~2, versus fixed 1.5 in city~B),%

@@ -87,4 +87,59 @@ for an example allocation of 80\% to city~A and 20\% to city~B.
   \floatfoot
   Gray bar indicates period of vaccine roll-out (days 60--75)
 \end{figure}
-
+\subsection{Parameterization}\label{app.model.param}
+Model parameter values and stratifications are summarized in Table~\ref{tab:model.params},
+repeated (verbatim) in Table~\ref{tab:model.params.app} for easier reference.
+\begin{table}
+  \centering
+  \caption{Model parameters, including default values and ranges explored via grid sweep}
+  \label{tab:model.params.app}
+  \input{tab.model.params}
+\end{table}
+\paragraph{Sexual Behaviour}
+Parameterization of sexual behaviour was primarily informed by existing analyses conducted
+to support mathematical modelling of \textsc{hiv}-transmission among \GBMSM in Canada
+\cite[n.b. Appendix~3.2]{Wang2021}.
+These analyses stratified \GBMSM into
+88--94\% lower risk, with on average 4 sexual partners per-year ($\approx .01$ per day), and
+6--12\% higher risk, with approximately 6-times as many partners ($\approx .07$ per day).
+Our present model includes even greater partner numbers among the higher risk group (.10--.25 per day),
+partly to fit \MPXV $R_0 \in [1,~2]$, and because
+the 6-fold value in \cite{Wang2021} was mainly applied as a generalized proxy for
+6-times higher HIV incidence.
+Weighted pooling of data from three studies \cite{MaleCall2013,Lachowsky2016,Wilton2016}
+suggested that approximately 12\% of respondents
+reported 20+ sexual partners in the past 6 months ($\approx .11+$ per day).
+Our \MPXV model also models transmission risk per-partnership,
+versus per-contact (sex act) as in \cite{Wang2021};
+with high \SAR, \MPXV transmission risk would be expected to be
+driven more by numbers of partners than by total contacts (sex acts).
+\paragraph{Monkeypox Virus (\MPXV)}
+Updated epidemiological data on \MPXV infection and transmission
+in the context of the present epidemic are rapidly emerging \cite{Thornhill2022,PHO2022synth}.
+In the absence of high-quality evidence on
+the secondary attack rate (\SAR) of sexual transmission,
+we assumed a relatively high \SAR of 0.9 (per-partnership),
+drawing on local patient histories, and in order to reproduce $R_0 \in [1,2]$.
+We estimated $R_0 \in [1,2]$ using \MPXV case data from Ontario \cite{PHO2022ont}
+before widespread vaccine roll-out (2022 May 13 -- July 4)
+using the \texttt{EpiNow2} R package \cite{EpiNow2}.
+\par
+In another model \cite{Endo2022},
+the modelled $R_0$ for a \GBMSM sexual network was greater, even for smaller \SAR.
+Two main factors may explain this discrepancy in
+modelled $R_0$ vs \SAR in \cite{Endo2022} vs our model.
+First, isolation was not explicitly modelled in \cite{Endo2022};
+thus the reported \SAR in \cite{Endo2022} can be considered as
+after considering isolation, i.e., reduced.
+Second, the branching process model in \cite{Endo2022}
+captured greater risk heterogeneity than our model,
+and focused especially on capturing the highest levels of risk (``heavy tail'').
+Such heterogeneity is directly related to $R_0$
+through the coefficient of variation in contact rates \cite{Anderson1986}.
+Thus, this difference in model structure could further explain why
+modelled $R_0$ would be greater in \cite{Endo2022}, for even similar \SAR.
+Finally, our aim was to obtain generalizable insights about network-level vaccine prioritization,
+rather than to model specific contexts within Ontario;
+as such, we do not expect our main findings to change
+with moderate changes to the model simplifications regarding transmission.

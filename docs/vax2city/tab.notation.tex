@@ -4,18 +4,21 @@
   \midrule
        $c$      & city index $\in$\{A, B\}                                  \\
        $r$      & risk group index $\in$ \{high, low\}                      \\
-       $y$      & type of contact index $\in$ \{sexual, non-sexual\}        \\[1ex]
+       $y$      & type of contact index $\in$ \{sexual, close non-sexual\}  \\[1ex]
        $N$      & population size                                           \\
        $C$      & contact rate                                              \\
        $Q$      & total contacts offered: $NC$                              \\
    $\epsilon$   & assortativity parameter $\in$ [1: assortative, 0: random] \\[1ex]
     $\lambda$   & incidence rate (force of infection)                       \\
-     $\beta$    & transmission probability                                  \\
+     $\beta$    & secondary attack rate\tn{a}                               \\
   $\sigma^{-1}$ & duration of latent/incubation period                      \\
   $\gamma^{-1}$ & duration of infectious/symptom period                     \\
      $\Phi$     & probability of contact formation                          \\[1ex]
      $\rho$     & proportion isolating among infectious                     \\
       $\nu$     & vaccination rate                                          \\
-       $f$      & vaccine effectiveness                                     \\
+       $f$      & vaccine effectiveness (leaky=type)                        \\
   \bottomrule
 \end{tabular}
+\floatfoot
+All durations in days; all rates in per-day.
+\tnt[a]{per-partnership transmission probability}
