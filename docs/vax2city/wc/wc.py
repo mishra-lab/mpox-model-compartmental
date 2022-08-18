@@ -1,5 +1,5 @@
 import os,re
-docs = ['intro','methods','results','discussion']
+docs = ['intro','methods','results','interp']
 igs = [
   '(?<!\\\\)%.*',
   '\\\\par',
