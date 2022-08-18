@@ -10,7 +10,7 @@ We constructed a deterministic compartmental \SVEIR model of monkeypox transmiss
 We parameterized the model to reflect
 two representative, weakly connected \GBMSM sexual networks (cities) in Ontario.
 We simulated roll-out of 5000 vaccine doses over 15 days,
-starting 60 days after epidemic seeding by 10 imported cases.
+starting 60 days after epidemic seeding with 10 imported cases.
 Within this model, we varied:
 the relative city (network) sizes,
 epidemic potentials ($R_0$),
@@ -18,12 +18,12 @@ between-city mixing,
 and distribution of imported/seed cases between cities.
 In each context (combination of varied factors),
 we then identified the ``optimal'' allocation of doses between cities
---- resulting in the fewest infections overall by day 120.
+--- resulting in the fewest cumulative infections by day 120.
 \emph{Results.}
 Under our modelling assumptions, we found that a fixed supply of vaccines
 could generally avert more infections over short-term time horizons when prioritized to:
 a larger transmission network,
-a network with more initial infections, and
+a network with more initial infections, and/or
 a network with greater $R_0$.
 Greater between-city mixing decreased the influence of initial seed cases, and
 increased the influence of city $R_0$ on optimal allocation.
