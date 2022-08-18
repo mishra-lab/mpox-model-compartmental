@@ -16,9 +16,10 @@
   backend=biber,
   sorting=none,
 ]{biblatex}
-\renewcommand{\bibfont}{\small}
+\renewcommand{\bibfont}{\footnotesize}
 \DeclareSourcemap{\maps[datatype=bibtex]{
   \map{\step[typesource=techreport, typetarget=report]}}}
+\renewcommand*{\multicitedelim}{\addcomma}
 % spacing
 \frenchspacing
 \setlength{\parskip}{1ex}
