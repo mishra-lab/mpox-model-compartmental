@@ -1,5 +1,5 @@
 \small
-\begin{tabular}{llrcc}
+\begin{tabular}{llrcl}
   \toprule
   Parameter                          & Stratum                   &      Value &      Range       & Ref \\
   \midrule
@@ -7,24 +7,24 @@
                                      & fraction in city A        &        .50 &    [.20,~.80]    & \tn{a} \\
   Fraction higher risk               & city A                    &        .10 & [.01,~.50]\tn{b} & \cite{Wang2021}\tn{a} \\
                                      & city B                    &        .10 &                  & \cite{Wang2021}\tn{a} \\[1ex]
-  Contact rate                       & close non-sexual, all     &          1 &                  & \tn{a} \\
-                                     & sexual, low risk          &        .01 &                  & \cite{Wang2021}\tn{a} \\
-                                     & sexual, high risk, city A & .178\tn{c} & [.10,~.25]\tn{b} & \cite{Wang2021,Endo2022}\tn{a} \\
-                                     & sexual, high risk, city B & .178\tn{c} &                  & \cite{Wang2021,Endo2022}\tn{a} \\[1ex]
-  Assortativity                      & cities, all contacts      &        .90 &    [.70,~1.0]    & \cite{Armstrong2020}\tn{a} \\
+  Contact rate                       & close non-sexual, all     &          1 &                  & \cite{Milwid2022}\tn{a} \\
+                                     & sexual, lower risk        &        .01 &                  & \cite{Wang2021}\tn{a} \\
+                                     & sexual, higher risk, city A & .189\tn{c} & [.10,~.25]\tn{b} & \cite{Wang2021,Endo2022}\tn{a} \\
+                                     & sexual, higher risk, city B & .189\tn{c} &                  & \cite{Wang2021,Endo2022}\tn{a} \\[1ex]
+  Assortativity\tn{d}                & cities, all contacts      &        .90 &    [.70,~1.0]    & \cite{Armstrong2020}\tn{a} \\
                                      & risk, close non-sexual    &          0 &                  & \tn{a} \\
                                      & risk, sexual              &        .50 &                  & \tn{a} \\
-  Per-contact \SAR                   & close non-sexual          &        .05 &                  & \cite{Beer2019} \\
+  Per-contact \SAR                   & close non-sexual          &  .01\tn{e} &                  & \cite{Beer2019,Thornhill2022} \\
                                      & sexual                    &  .90\tn{c} &                  & \cite{Endo2022}\tn{a} \\[1ex]
   Initial infections                 & overall                   &         10 &                  & \tn{a} \\
                                      & fraction in city A        &        .50 &    [0.0,~1.0]    & \tn{a} \\[1ex]
-  Duration of period                 & latent/incubation         &          7 &                  & \cite{Charniga2022,Thornhill2022,Miura2022} \\
+  Duration of period                 & latent/incubation         &          8 &                  & \cite{Charniga2022,Thornhill2022,Miura2022,Guzzetta2022} \\
                                      & infectious/symptoms       &         21 &                  & \cite{Adler2022,Thornhill2022} \\
-  Fraction isolated among infected   &                           &        .50 &                  & \cite{Thornhill2022}\tn{a} \\[1ex]
-  Vaccines available                 &                           &       5000 &                  & \tn{a} \\
-  Vaccine effectiveness\tn{d}        &                           &        .85 &                  & \cite{Fine1988,PHAC2022vax,CDC2022vax} \\
-  Vaccine prioritization sensitivity & high risk                 &        .90 &                  & \cite{TPH2022vax}\tn{a} \\
-  Vaccine allocation                 & city A                    &        .50 & [0.0,~1.0]\tn{e} & --- \\
+  Fraction of infectious period isolated &                       &        .50 &                  & \cite{Thornhill2022,deBaetselier2022}\tn{a} \\[1ex]
+  Vaccines available                 &                           &      5000 &                  & \tn{a} \\
+  Vaccine effectiveness\tn{f}        &                           &        .85 &                  & \cite{Fine1988,NACI2022vax,CDC2022vax} \\
+  Vaccine prioritization sensitivity & higher risk               &        .90 &                  & \cite{TPH2022vax}\tn{a} \\
+  Vaccine allocation                 & city A                    &        .50 & [0.0,~1.0]\tn{g} & --- \\
   \bottomrule
 \end{tabular}
 \floatfoot
@@ -35,5 +35,8 @@ All durations in days; all rates in per-day.
 \tnt[c]{Calculated to fit $R_0 = 1.5$,
   reflecting pre-vaccination estimate of \MPXV $R_0$ in Ontario \cite{PHO2022ont}
   via \cite{EpiNow2}.}
-\tnt[d]{Leaky-type.}
-\tnt[e]{Optimized parameter.}
+\tnt[d]{Fraction of all contacts formed exclusively within-group;
+  0 implies random mixing; 1 implies no mixing.}
+\tnt[e]{Calibrated to fit approximately 95\% incidence via sexual vs close, non-sexual contacts.}
+\tnt[f]{Leaky-type: partial protection among vaccinated.}
+\tnt[g]{Optimized parameter.}

@@ -1,38 +1,33 @@
-\renewcommand{\emph}[1]{\textsc{\MakeLowercase{#1}}}
+\renewcommand{\emph}[1]{\par\textbf{#1}}
 \emph{Background.}
-In the current global monkeypox outbreak,
-many jurisdictions have been faced with limited vaccine supply,
-motivating interest in efficient allocation.
-We sought to explore optimal vaccine allocation between two linked transmission networks
-over a short-term time horizon, across a range of epidemic conditions.
+The current global monkeypox virus (\MPXV) outbreak
+has disproportionately affected gay, bisexual, and other men who have sex with men (\GBMSM).
+Given that many jurisdictions have been faced with limited supplies of \MPXV vaccine,
+we aimed to explore optimal vaccine allocation between two linked \GBMSM transmission networks
+over a short-term time horizon, across several epidemic conditions.
 \emph{Methods.}
-We constructed a deterministic compartmental \SVEIR model of monkeypox transmission.
+We constructed a deterministic compartmental \MPXV transmission model.
 We parameterized the model to reflect
-two representative, weakly connected \GBMSM sexual networks (cities) in Ontario.
-We simulated roll-out of 5000 vaccine doses over 15 days,
-starting 60 days after epidemic seeding with 10 imported cases.
+two representative, partially connected \GBMSM sexual networks (cities),
+using 2022 data from Ontario.
+We simulated a roll-out of 5000 vaccine doses over 30 days
+that started 45 days after epidemic seeding with 10 imported cases.
 Within this model, we varied:
-the relative city (network) sizes,
-epidemic potentials ($R_0$),
-between-city mixing,
-and distribution of imported/seed cases between cities.
-In each context (combination of varied factors),
-we then identified the ``optimal'' allocation of doses between cities
---- resulting in the fewest cumulative infections by day 120.
+the relative city (network) sizes, epidemic potentials ($R_0$), between-city mixing,
+and distribution of seed cases between cities.
+For each combination of varied factors, we identified the allocation of doses between cities
+that maximized infections averted by day 90.
 \emph{Results.}
-Under our modelling assumptions, we found that a fixed supply of vaccines
-could generally avert more infections over short-term time horizons when prioritized to:
-a larger transmission network,
-a network with more initial infections, and/or
-a network with greater $R_0$.
-Greater between-city mixing decreased the influence of initial seed cases, and
-increased the influence of city $R_0$ on optimal allocation.
-Under mixed conditions (e.g. fewer seed cases but greater $R_0$),
-optimal allocation saw doses shared between cities,
-suggesting that proximity-based and risk-based vaccine prioritization
-can work in combination to minimize transmission.
+Under our modelling assumptions, we found that a limited \MPXV vaccine supply
+could generally avert more early infections when prioritized to:
+networks that were larger, had more initial infections, or had greater $R_0$.
+Greater between-city mixing decreased the influence of initial seed cases
+and increased the influence of city $R_0$ on optimal allocation.
+Under mixed conditions (e.g., fewer seed cases but greater $R_0$),
+optimal allocation required doses shared between cities.
 \emph{Interpretation.}
-Prioritization of limited vaccine supply based on network-level risk factors
-can help minimize transmission during an emerging epidemic.
-Such prioritization should be grounded in an understanding of context-specific drivers of risk,
-and should acknowledge the potential connectedness of multiple transmission networks.
+In the context of the current global \MPXV outbreak, we showed that
+prioritization of a limited supply of vaccines based on network-level factors
+can help maximize infections averted during an emerging epidemic.
+Such priori­tization should be grounded in an understanding of context-specific risk drivers,
+and should acknowledge potential connectedness of multiple transmission networks.

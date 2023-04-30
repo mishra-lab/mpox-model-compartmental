@@ -1,35 +1,69 @@
 \section{Model Details}\label{app.model}
-Table~\ref{tab:notation} summarizes the notation used.
+Table~\ref{tab:notation} summarizes the notation used,
+and Figure~\ref{fig:model} illustrates the model structure,
+repeated (verbatim) in Figure~\ref{fig:app.model} for easier reference.
 \begin{table}[h]
   \centering
+  \vskip-1ex % HACK
   \caption{Notation}
   \label{tab:notation}
   \input{tab.notation}
+  \vskip-2ex % HACK
 \end{table}
+\begin{figure}
+  \begin{subfigure}[b]{0.55\linewidth}
+    \centerline{\includegraphics[scale=1]{model.health}}
+    \vskip3em
+    \caption{Health states and transitions}
+    \label{fig:app.model.health}
+  \end{subfigure}\hfill
+  \begin{subfigure}[b]{0.55\linewidth}
+    \centerline{\includegraphics[scale=1]{model.city.risk}}
+    \caption{Cities, risk groups, and contact networks}
+    \label{fig:app.model.city.risk}
+  \end{subfigure}
+  \caption{Model structure}
+  \label{fig:app.model}
+  \floatfoot
+  (\subref{fig:app.model.health})
+  $S$:~susceptible;
+  $V$:~vaccinated;
+  $E$:~exposed;
+  $I$:~infectious;
+  $H$:~isolating;
+  $R$:~recovered.
+  (\subref{fig:app.model.city.risk})
+  Arrow opacity is qualitatively related to the chance of sexual contact formation from any group to another.
+  See Table~\ref{tab:notation} for rate definitions.
+\end{figure}
 \subsection{Differential Equations}\label{app.model.eqn}
-Equation~\eqref{eq:ode} summarizes the system of differential equations for the SVEIR health states;
-each equation is repeated for each combination of city~$c$ (A,~B) and risk group~$r$ (high,~low) (4 total),
+Equation~\eqref{eq:ode} summarizes the system of differential equations for the health states;
+each equation is repeated for each combination of city~$c$ (A,~B) and risk group~$r$ (higher,~lower) (4~total),
 but we omit the $cr$ index notation for clarity.
 \begin{subequations}\label{eq:ode}
   \begin{alignat}{5}
     \frac{d}{dt}&S   &&= - \nu S - \lambda S \\
     \frac{d}{dt}&V   &&= + \nu S - (1 - f) \lambda V \\
     \frac{d}{dt}&E   &&= + \lambda S + (1-f) \lambda V - \sigma E\\
-    \frac{d}{dt}&\,I &&= + \sigma E - \gamma I \\
-    \frac{d}{dt}&R   &&= + \gamma I
+    \frac{d}{dt}&\,I &&= + \sigma E - \frac{\gamma}{1-\rho}\,I \\
+    \frac{d}{dt}&H   &&= + \frac{\gamma}{1-\rho}\,I - \frac{\gamma}{\rho} H\\
+    \frac{d}{dt}&R   &&= + \frac{\gamma}{\rho} H
   \end{alignat}
 \end{subequations}
 \subsection{Incidence Rate}\label{app.model.inc}
 The incidence rate (force of infection) for
-non-vaccinated susceptible individuals in city $c$ and risk group $r$ (``group $cr$'') is defined as:
-\begin{equation}
-  \lambda_{cr} = \sum_{yc'r'} (1 - \rho)\,\beta_{y}\,C_{ycr}\,\Phi_{ycrc'r'} \frac{I_{c'r'}}{N_{c'r'}}
+non-vaccinated susceptible individuals in city $c$ and risk group $r$ (``group $cr$'') is defined as:%
+\footnote{The online Appendix to the published paper erroneously includes a term ``$(1 - \rho)$''
+  in \eqref{eq:foi}, which should have been removed after the isolating state $H$
+  was added during revisions.}
+\begin{equation}\label{eq:foi}
+  \lambda_{cr} = \sum_{yc'r'} \beta_{y}\,C_{ycr}\,\Phi_{ycrc'r'} \frac{I_{c'r'}}{N_{c'r'}}
 \end{equation}
 where:
-$\rho$ is the proportion isolating among infectious;
 $\beta_{y}$ is the transmission probability per type-$y$ contact;
 $C_{ycr}$ is the type-$y$ contact rate among group $cr$;
-$\Phi_{ycrc'r'}$ is the probability of type-$y$ contact formation with group $c'r'$ among group $cr$; and
+$\Phi_{ycrc'r'}$ is the probability of forming a type-$y$ contact
+  with group $c'r'$ (contacts) among group $cr$ (self); and
 $N_{cr}$ is the size of group $cr$.
 \par
 Among vaccinated, the incidence rate is simply reduced by a factor $(1-f)$, where
@@ -38,7 +72,7 @@ $f$ is the vaccine effectiveness (leaky-type).
 Mixing between risk groups and cities was implemented using
 an adaptation of a common approach \cite{Nold1980,Garnett1994}.
 We denote the total contacts ``offered'' by group~$cr$ as: $Q_{cr} = N_{cr} C_{cr}$;
-and denote the margins $Q_{c} = \sum_{r}Q_{cr}$; $Q_{r} = \sum_{c} Q_{cr}$; and $Q = \sum_{cr}Q_{cr}$.
+and denote the margins (sums) $Q_{c} = \sum_{r}Q_{cr}$; $Q_{r} = \sum_{c} Q_{cr}$; and $Q = \sum_{cr}Q_{cr}$.
 The probability of contact formation with group $c'r'$ among group $cr$ is defined as:
 \begin{equation}
   \Phi_{crc'r'} =
@@ -59,7 +93,7 @@ For clarity, we omit the index of contact type $y$,
 although $\epsilon_r$, $C_{cr}$ and thus $\Phi_{crc'r'}$ are all further stratified by $y$.
 \subsection{City $R_0$}\label{app.model.R0}
 The basic reproduction number $R_0$ for each city was defined
-in the absence of vaccination and ignoring between-city mixing --- i.e. with $\epsilon_c = 1$.
+in the absence of vaccination and ignoring between-city mixing --- i.e., with $\epsilon_c = 1$.
 Following \cite{Diekmann1990}, we define $R_0$ as
 the dominant eigenvalue of the city-specific next generation matrix $K$;
 matrix elements $K_{rr'}$ are defined as:
@@ -74,21 +108,21 @@ $\Phi_{yrr'}$ is the probability of type-$y$ contact formation with group $r'$ a
 $N_{r}$ is the size of group $r$; and
 $\gamma^{-1}$ is the duration of infectiousness.
 \subsection{Vaccine Allocation}\label{app.model.vax}
-Vaccination is modelled as distribution of 5000 doses over 15 days from day 60 (333 doses per day).
+Vaccination is modelled as distribution of 5000 doses over 30 days from day 45 (167 doses per day).
 Vaccines are prioritized to the high risk group with 90\% sensitivity, such that
 4500 doses actually reach the high risk group, and
 500 doses are given to the lower risk group.
 Figure~\ref{fig:prev.vax} illustrates vaccination coverage/counts by city/risk group
 for an example allocation of 80\% to city~A and 20\% to city~B.
 \begin{figure}[h]
-  \includegraphics[width=\linewidth]{prev.vax}
+  \includegraphics[width=\linewidth]{vax}
   \caption{Example vaccine allocation: 80\% to city~A, and 90\% to high risk group}
   \label{fig:prev.vax}
   \floatfoot
-  Gray bar indicates period of vaccine roll-out (days 60--75)
+  Gray bar indicates period of vaccine roll-out (days 45--75)
 \end{figure}
 \subsection{Parameterization}\label{app.model.param}
-Model parameter values and stratifications are summarized in Table~\ref{tab:model.params},
+Model parameter values and stratifications are summarized in Table~1,
 repeated (verbatim) in Table~\ref{tab:model.params.app} for easier reference.
 \begin{table}
   \centering
@@ -96,13 +130,16 @@ repeated (verbatim) in Table~\ref{tab:model.params.app} for easier reference.
   \label{tab:model.params.app}
   \input{tab.model.params}
 \end{table}
-\paragraph{Sexual Behaviour}
-Parameterization of sexual behaviour was primarily informed by existing analyses conducted
+\paragraph{Risk Groups and Sexual Contacts}
+Parameterization of risk groups and contacts was primarily informed by existing analyses conducted
 to support mathematical modelling of \textsc{hiv}-transmission among \GBMSM in Canada
-\cite[n.b. Appendix~3.2]{Wang2021}.
+\cite[n.b. Appendix~3.2]{Wang2021},
+since sexual history data among \GBMSM diagnosed with \MPXV in Canada are not yet available.
 These analyses stratified \GBMSM into
 88--94\% lower risk, with on average 4 sexual partners per-year ($\approx .01$ per day), and
-6--12\% higher risk, with approximately 6-times as many partners ($\approx .07$ per day).
+6--12\% higher risk, with approximately 6-times as many partners ($\approx .07$ per day),
+reflecting common stratification corresponding to
+rates of bacterial STI and partner number distributions \cite{Hart2021,Brogan2019}.
 Our present model includes even greater partner numbers among the higher risk group (.10--.25 per day),
 partly to fit \MPXV $R_0 \in [1,~2]$, and because
 the 6-fold value in \cite{Wang2021} was mainly applied as a generalized proxy for
@@ -114,7 +151,35 @@ Our \MPXV model also models transmission risk per-partnership,
 versus per-contact (sex act) as in \cite{Wang2021};
 with high \SAR, \MPXV transmission risk would be expected to be
 driven more by numbers of partners than by total contacts (sex acts).
-\paragraph{Monkeypox Virus (\MPXV)}
+\par
+A retrospective and rapid sexual history survey of
+45 individuals diagnosed with \MPXV identified that
+60\% (27 of 45) were diagnosed with an STI in the previous year,
+44\% (20 of 45) reported more than 10 sexual partners in the previous 3 months, and
+44\% (20 of 45) reported group sex during the incubation period~\cite{UKHSA2022}.
+\paragraph{Close, Non-Sexual Contacts}
+We defined close, non-sexual contacts as
+direct exposure of broken skin or mucous membranes,
+or to bodily fluids or potentially infectious material (including clothing or bedding)
+without appropriate personal protective equipment,
+such as sleeping in the same bed.
+Based on available data on types of partnerships,
+30--60\% of \GBMSM in Canada report a regular sex partner \cite{Milwid2022},
+and data on additional living conditions (such as cohabitating with non-sexual partners) was not available.
+\paragraph{Network Connectivity}
+There is limited data on proportion of contacts (sexual and close non-sexual)
+formed between different regional \GBMSM networks,
+Such proportions will also depend on the geographic scale of the networks considered,
+while our study aimed to be generalizable across scales.
+In \cite{Armstrong2020} 37.5\% of 269 respondents from Waterloo, Ontario
+had travelled outside the region for sex;
+however, this does not necessarily reflect the proportion of all sex outside the region.
+From limited case-series data, evidence suggests that
+a smaller fraction have likely acquired \MPXV infection via sex in other cities:
+among cases among Toronto residents seen at Unity Health Toronto between 2022 May 20 and July 15:
+2/27 were identified as infection from sexual exposures outside Toronto
+\cite[personal communication]{Mishra2022}.
+\paragraph{Monkeypox Virus (\MPXV) \& Reproduction Number}
 Updated epidemiological data on \MPXV infection and transmission
 in the context of the present epidemic are rapidly emerging \cite{Thornhill2022,PHO2022synth}.
 In the absence of high-quality evidence on
@@ -124,6 +189,8 @@ drawing on local patient histories, and in order to reproduce $R_0 \in [1,2]$.
 We estimated $R_0 \in [1,2]$ using \MPXV case data from Ontario \cite{PHO2022ont}
 before widespread vaccine roll-out (2022 May 13 -- July 4)
 using the \texttt{EpiNow2} R package \cite{EpiNow2}.
+We further calibrated the \SAR for close, non-sexual to reproduce
+approximately 95\% incidence via sexual vs close, non-sexual contacts \cite{Vaughan2022}.
 \par
 In another model \cite{Endo2022},
 the modelled $R_0$ for a \GBMSM sexual network was greater, even for smaller \SAR.

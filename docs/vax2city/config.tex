@@ -5,23 +5,24 @@
 \makeatletter\g@addto@macro\bfseries{\boldmath}\makeatother
 \usepackage{xcolor}
 \usepackage[colorlinks,citecolor=purple]{hyperref}
-\usepackage[bottom]{footmisc}
+\usepackage[bottom,marginal]{footmisc}
 \usepackage{graphicx,booktabs,subcaption,mathtools}
 \graphicspath{{fig/}}
-\newcommand{\floatfoot}{\medskip\par\footnotesize}
+\newcommand{\floatfoot}{\medskip\par\footnotesize\noindent}
 \addbibresource{main.bib}
 \usepackage{xspace}
 \newcommand{\MPXV}{\textsc{mpvx}\xspace}
 \newcommand{\GBMSM}{\textsc{gbmsm}\xspace}
-\newcommand{\SVEIR}{\textsc{sveir}\xspace}
 \newcommand{\SAR}{\textsc{sar}\xspace}
 \newcommand{\rtm}{\hskip0pt\textsuperscript{\textregistered}\xspace}
 \newcommand{\tn}[1]{\rlap{\textsuperscript{\,#1}}}
 \newcommand{\tnt}[2][]{\textsuperscript{#1\,}{#2}}
 \setlength{\skip\footins}{5ex plus 1ex minus 1ex}
 \newcommand{\gridfoot}{%
-  $R_0$ in city~A varies via the sexual activity among the high risk group in city~A.
-  Optimal allocation is defined as fewest cumulative infections by day~120.
-  Larger city is 3 times the size of the other city.
-  Most, moderate, and least inter-city mixing use $\epsilon_{c} = \{0.8,0.9,0.95\}$, respectively.}
+  Epidemic potential ($R_0$) in city~A varies via
+  the sexual activity among the high risk group in city~A.
+  We definedd optimal allocation as fewest cumulative infections by day~90.
+  The larger city is 3 times the size of the other city.
+  We used city assortativity $\epsilon_{c}$ values of 0.80, 0.90, and 0.95 for
+  high, moderate, and low between-city mixing, respectively.}
 \newcommand{\hreftt}[2][https://]{\href{#1#2}{\texttt{#2}}}

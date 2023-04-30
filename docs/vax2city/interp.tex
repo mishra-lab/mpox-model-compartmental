@@ -1,26 +1,29 @@
 \section{Interpretation}
 We sought to explore how different epidemic conditions
-could affect optimal allocation of a fixed supply of monkeypox virus (\MPXV) vaccine
-across two weakly connected transmission networks (e.g. cities or jurisdictions).
+could affect optimal allocation of a fixed supply of \MPXV vaccine
+across two partially connected transmission networks (e.g., cities or jurisdictions).
 Under our modelling assumptions, we found that:
 vaccines could generally avert more infections when prioritized to
 a larger network,
 a network with more initial infections, and
 a network with greater epidemic potential ($R_0$).
 \par
-Although our study, for simplicity, focused on two weakly-connected networks,
+Although our study, for simplicity, focused on two partially-connected networks,
 it highlights the importance of measuring outcomes for a population overall,
 by considering that geographies are comprised of interconnected networks.
 That is, while cities across Canada, and globally,
 feature important within- and between-city differences
 in size and configuration of transmission networks \cite{Scott2015,Gesink2018},
-and in access to interventions/services \cite{Millett2012,Hart2021,Doran2021},
-ultimately these cities remain connected with respect to transmission,
+and in access to interventions and services \cite{Millett2012,Hart2021,Doran2021},
+these cities ultimately remain connected with respect to transmission,
 and cannot be considered in isolation over longer time horizons
 \cite{Bogoch2015,Gesink2018,Armstrong2020}.
+We grounded the 2 networks as ``cities,'' but the implications would hold
+across geographic scope via vaccine allocation across
+health units, provinces, or even countries.
 \par
 Within such interconnected settings,
-our findings are consistent with previous studies which show that
+our findings are consistent with previous studies that showed that
 prioritizing limited vaccine supply/resources to communities or settings
 with the highest epidemic potential (shaped by density and other features of the contact network)
 generally yields the greatest benefit for the population overall
@@ -28,36 +31,54 @@ generally yields the greatest benefit for the population overall
 We also identified how key factors,
 such as number of imported cases and connections between networks,
 shape efficient early vaccine roll-out.
-While our model parameterization reflected \GBMSM sexual networks in Ontario,
+\par
+Although our model parameterization reflected \GBMSM sexual networks in Ontario,
 our findings have wider implications for vaccine roll-out globally.
 The persistent absence of vaccine supply and roll-out in
 regions already endemic for \MPXV outbreaks across West and Central Africa,
-including (although not yet reported) in the context of \GBMSM and sexual minorities,
-poses the largest threat to the control and mitigation of \MPXV globally \cite{Zarocostas2022},
-paralleling missed opportunities in achieving \textsc{covid-19} vaccine equity \cite{Yamey2022}.
+including (although not yet reported) in the context of \GBMSM and sexual minorities \cite{Manirambona2022},
+reflects another failure to uphold principles of equity in global health,
+paralleling missed opportunities in achieving \textsc{covid-19} vaccine equity \cite{Yamey2022};
+such failures also undermine efforts to control and mitigate \MPXV globally \cite{Zarocostas2022}.
 \par
 Prioritizing based on risk also requires understanding risk.
-Early vaccine roll-out in Ontario reached Toronto,
+Early vaccine roll-out in Ontario started in Toronto,
 where cases were already detected, the population size was large, and
 rates of bacterial sexually transmitted infections suggested
 a potentially denser sexual network and thus, greater epidemic potential \cite{Endo2022}.
 Our model implemented differential $R_0$ between cities via contact rates;
 however, epidemic potential may also be linked to intervention access,
 including access to diagnoses and isolation support \cite{Millett2012,Cevik2021supp}.
-Thus, our findings signal the importance of characterizing
-the drivers of epidemic potential across jurisdictions and communities,
+Thus, our findings suggest that characterizing the drivers of epidemic potential
+across jurisdictions and communities is important,
 including participatory, community-based surveillance and research
 into the contexts that lead to disproportionate risks at a network-level,
-not just an individual-level \cite{Baral2013,Cevik2021net}.
+not just at an individual-level \cite{Baral2013,Cevik2021net}.
+\subsection{Limitations}
+Our study aimed to provide fundamental and generalizable findings
+using a broad sensitivity analysis to identify conditions that can shape
+optimal short-term vaccine allocation with a limited supply.
+As with any modelling study, our results depended on
+our modelling assumptions and parameter values;
+for some of these, limited data were available.
+We did not evaluate population-level benefits balanced with potential adverse effects,
+given existing data on high safety with the smallpox vaccines used in Canada \cite{Frey2013,WHO2015}.
 \par
-Our study aimed to provide fundamental and generalizable findings, and thus
-explored a broad sensitivity analysis to identify conditions that can shape
-optimal short-term vaccine allocation, with very limited supply.
-One limitation of our study is that
-we used a simple compartmental model, with only two risk groups;
-future work would benefit from more nuanced representations of risk,
-for example, using individual-based sexual network models.
-Second, our study only examined two transmission networks (``cities'');
-incorporation of additional networks could yield more interesting prioritization findings.
-However, we expect that the general principles and insights from two networks
-would apply across multiple networks.
+We used a simple compartmental model, with only two risk groups;
+future work would benefit from more nuanced representations of risk
+(e.g., using individual-based sexual network models).
+Our study also explored only two representative \GBMSM transmission networks (cities)
+with a fixed number of doses.
+Incorporation of the wider population, additional transmission networks, or
+calibration to observed data on cases, service availability, and vaccine uptake
+in specific cities or relevant jurisdictions,
+could yield more interesting prioritization findings.
+However, we expect that our findings using thest two networks
+would apply across multiple networks and conditions.
+\par
+Finally, we restricted our study to a limited vaccine supply with a fixed rollout approach,
+and future research would benefit from exploring the sensitivity of results to
+different amounts of finite supply,
+time–variant vaccination rate, and
+number of imported/seed cases,
+as well as timing of vaccine availability in relation to epidemic phase.
