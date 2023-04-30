@@ -2,10 +2,10 @@
 \begin{tikzpicture}[x=1\dx,y=1\dx,
     state/.append style = {font=\small},
     arrowx/.style = {arrow,draw=black!#1!white,latex-latex},]
-  \node[state=Al] (al) at (0,0) {City A\\Lower R};
-  \node[state=Bl] (bl) at (2,0) {City B\\Lower R};
-  \node[state=Ah] (ah) at (0,2) {City A\\Higher R};
-  \node[state=Bh] (bh) at (2,2) {City B\\Higher R};
+  \node[state=Al] (al) at (0,0) {City A\\Lower\\Risk};
+  \node[state=Bl] (bl) at (2,0) {City B\\Lower\\Risk};
+  \node[state=Ah] (ah) at (0,2) {City A\\Higher\\Risk};
+  \node[state=Bh] (bh) at (2,2) {City B\\Higher\\Risk};
   \draw[arrowx=050] (ah) -- (al);
   \draw[arrowx=050] (bh) -- (bl);
   \draw[arrowx=020] (ah) -- (bh);

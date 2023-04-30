@@ -5,10 +5,12 @@
   \node[state=V] (v) at (0,0) {$V$};
   \node[state=E] (e) at (2,2) {$E$};
   \node[state=I] (i) at (4,2) {$I$};
-  \node[state=R] (r) at (6,2) {$R$};
+  \node[state=H] (h) at (6,2) {$H$};
+  \node[state=R] (r) at (8,2) {$R$};
   \draw[arrow] (s) -- node[right]{\rate{$\nu$}} (v);
   \draw[arrow] (s) -- node[above]{\rate{$\lambda$}} (e);
   \draw[arrow] (v) -- node[below right]{\rate{$(1-f)\lambda$}} (e);
   \draw[arrow] (e) -- node[above]{\rate{$\sigma$}} (i);
-  \draw[arrow] (i) -- node[above]{\rate{$\gamma$}} (r);
+  \draw[arrow] (i) -- node[above]{\rate{$\displaystyle\frac{\gamma}{1-\rho}$}} (h);
+  \draw[arrow] (h) -- node[above]{\rate{$\displaystyle\frac{\gamma}{\rho}$}} (r);
 \end{tikzpicture}
