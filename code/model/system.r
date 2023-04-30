@@ -49,6 +49,7 @@ sys.dX = function(P,X,t){
   dX  = 0*X # initialize
   # incidence (to exposed)
   inc = sys.inc(P,X,t)
+  # print(sys.inc(list.update(P,sar.sex=0),X,t)/inc) # DEBUG
   inf = X[,,1:2] * inc
   dX[,,1:2] = dX[,,1:2] - inf
   dX[,,3]   = dX[,,3] + rowSums(inf,dim=2)
@@ -56,10 +57,14 @@ sys.dX = function(P,X,t){
   dXi = X[,,3] / P$dur.exp
   dX[,,3] = dX[,,3] - dXi
   dX[,,4] = dX[,,4] + dXi
-  # recovery
-  dXi = X[,,4] / P$dur.inf
+  # isolation
+  dXi = X[,,4] / P$dur.inf / (1-P$iso.prop)
   dX[,,4] = dX[,,4] - dXi
   dX[,,5] = dX[,,5] + dXi
+  # recovery
+  dXi = X[,,5] / P$dur.inf / P$iso.prop
+  dX[,,5] = dX[,,5] - dXi
+  dX[,,6] = dX[,,6] + dXi
   # vaccination
   dXi = sys.vax(P,X,t)
   dX[,,1] = dX[,,1] - dXi
@@ -81,7 +86,7 @@ sys.vax = function(P,X,t){
 sys.inc = function(P,X,t){
   # compute incidence
   prev.city.risk = X[,,4] / P$X.city.risk
-  inc = (1 - P$iso.prop) * (
+  inc = (
     # multiply sar & 'C' (with mixing) by appropriate prevalence & sum across 'others'
     P$sar.sex * rowSums(sweep(P$C.sex,c(3,4),prev.city.risk,'*'),dim=2) +
     P$sar.com * rowSums(sweep(P$C.com,c(3,4),prev.city.risk,'*'),dim=2)
@@ -95,10 +100,10 @@ sys.R0 = function(P){
   M.com = def.mix(P$X.city.risk,P$C.com.city.risk,P$asso.com,1)
   R0 = lapply(list(A=1,B=2),function(city){
     Kij = function(i,j){
-      (1 - P$iso.prop) * (
+      (
         P$sar.sex * P$C.sex.city.risk[city,i] * M.sex[city,i,city,j] +
         P$sar.com * P$C.com.city.risk[city,i] * M.com[city,i,city,j]
-      ) * P$dur.inf * P$X.city.risk[city,i] / P$X.city.risk[city,j]
+      ) * P$dur.inf * (1-P$iso.prop) * P$X.city.risk[city,i] / P$X.city.risk[city,j]
     }
     K = array(c(Kij(1,1),Kij(2,1),Kij(1,2),Kij(2,2)),c(2,2))
     return(max(eigen(K)$values))

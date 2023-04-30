@@ -34,7 +34,7 @@ v2c.optimize = function(P=NULL,force=NULL){
 v2c.plot.vax = function(){
   # plot coverage & numbers of vaccine allocated for an example strategy and set of conditions
   t = def.t()
-  P = def.params(X0.ei=0,x.A=.5,vax.x.A=.8)
+  P = def.params(X0.eih=0,x.A=.5,vax.x.A=.8)
   R = sys.run(P,t)
   outs = do.call(rbind,list(
     out.prevalence(R,mode='prop',health='vax',strat=c('city','risk')),
@@ -43,7 +43,7 @@ v2c.plot.vax = function(){
     out.prevalence(R,mode='abs', health='vax',strat=NULL)
   ))
   outs$city.risk = city.risk.factor(outs)
-  outs$name = factor(outs$name,levels=unique(outs$name),labels=c('Coverage (%)','Count'))
+  outs$name = factor(outs$name,levels=unique(outs$name),labels=c('Coverage (%)','Count (N)'))
   g = plot.out(outs,color='city.risk',linetype='city.risk',ylabel=NULL) +
     facet_wrap('name',scales='free_y') +
     scale_color_manual(values=colours.city.risk) +
@@ -53,41 +53,50 @@ v2c.plot.vax = function(){
   plot.save('vax',w=8,h=3)
 }
 
-v2c.plot.incidence = function(mode='cum.abs'){
+v2c.plot.incidence = function(params='base'){
   # plot incidence (cum.abs, rate, etc.) for three strategies for a set of conditions
   # faceting & coloured by city.risk, linetype by strategy
+  P0 = list(
+    'base'   = def.params(),
+    'toroth' = def.params.toroth()
+  )[[params]]
   P.list = list(
-    'No Vaccine'   = def.params(P=def.params.torott(),vax.X=0),
-    'Proportional' = def.params(P=def.params.torott(),vax.x.A=.75),
-    'Optimal'      = def.params(P=def.params.torott(),vax.x.A='opt'))
+    'No Vaccine'   = def.params(P=P0,vax.X=0),
+    'Proportional' = def.params(P=P0,vax.x.A=P0$x.A),
+    'Optimal'      = def.params(P=P0,vax.x.A='opt'))
   t = def.t()
   outs = do.call(rbind,lapply(names(P.list),function(case){
     P = P.list[[case]]
     R = sys.run(P,t)
-    outs = do.call(rbind,list(
-      out.incidence(R,mode=mode,strat=c('city','risk')),
-      out.incidence(R,mode=mode,strat=NULL)
-    ))
+    outs = rbind(
+      out.incidence(R,mode='cum.abs',strat=c('city','risk')),
+      out.incidence(R,mode='cum.abs',strat=NULL),
+      out.incidence(R,mode='rate',strat=c('city','risk')),
+      out.incidence(R,mode='rate',strat=NULL)
+    )
     outs$case = case
     return(outs)
   }))
-  outs$case  = factor(outs$case,levels=names(P.list))
+  outs$case.lab = factor(outs$case,levels=names(P.list))
+  outs$name.lab = factor(outs$name,labels=c('Cumulative infections (N)','Rate (per 1000 person-days)'))
   outs$city.risk = city.risk.factor(outs)
-  g = plot.out(outs,linetype='case',color='city.risk') +
-    facet_wrap('city.risk',ncol=2,scales='free_y') +
-    labs(linetype='Vaccine\nStrategy') +
+  print(outs[outs$city.risk=='Overall' & outs$t==t[length(t)],]) # MAN
+  g = plot.out(outs,linetype='case.lab',color='city.risk') +
+    ggh4x::facet_grid2('city.risk~name.lab',scales='free_y',independent='y') +
+    labs(y='Incidence',linetype='Vaccine Strategy') +
     scale_linetype_manual(values=c('22','62','solid')) +
     scale_color_manual(values=colours.city.risk,guide='none') +
     show.vax(P.list[[1]]) +
-    theme(legend.position=c(.75,.15),legend.box='horizontal')
-  plot.save(paste0('inf.',mode),w=6,h=6)
+    theme(legend.position='top')
+  g = .facet.letters(g,pars='case.lab',color='black')
+  plot.save(paste0('inf.',params),w=5,h=8)
 }
 
-v2c.grid.run = function(n=11,main.vars=c('R0.A','x0.ei.A')){
+v2c.grid.run = function(n=11,main.vars=c('R0.A','x0.eih.A')){
   v.fun = function(name,v){ if (name %in% main.vars){ v$main } else { v$facet } }
   grid = expand.grid(
     R0.A      = v.fun('R0.A',     list(main=seq(1.05,1.95,l=n),facet=c(1.2,1.5,1.8))),
-    x0.ei.A   = v.fun('x0.ei.A',  list(main=seq(0.05,0.95,l=n),facet=c(.25,.50,.75))),
+    x0.eih.A  = v.fun('x0.eih.A', list(main=seq(0.05,0.95,l=n),facet=c(.25,.50,.75))),
     asso.city = v.fun('asso.city',list(main=seq(0.70,1.00,l=n),facet=c(.80,.90,.95))),
     x.A       = v.fun('x.A',      list(main=seq(0.20,0.80,l=n),facet=c(.25,.50,.75)))
   )
@@ -118,7 +127,7 @@ v2c.grid.clean = function(grid){
   grid$dci.prop  = grid$prop.cum.inf - grid$opt.cum.inf
   grid$rdci.prop = 100 * (grid$prop.cum.inf - grid$opt.cum.inf) / grid$prop.cum.inf
   grid$R0.AvB = grid$R0.A / R0.B
-  grid$x0.ei.A.pct = 100 * grid$x0.ei.A
+  grid$x0.eih.A.pct = 100 * grid$x0.eih.A
   grid$f.X.AvB = factor(grid$x.A/(1-grid$x.A),levels=c(1/3,1,3),
     labels=c('City B larger','Cities same size','City A larger'))
   grid$f.mix.city = factor(grid$asso.city,levels=unique(grid$asso.city),
@@ -137,15 +146,15 @@ v2c.grid = function(fresh=FALSE,slug='grid',...){
   return(v2c.grid.clean(grid))
 }
 
-v2c.grid.plot = function(grid,z,x='x0.ei.A.pct',y='R0.A',fh='f.X.AvB',fv='f.mix.city'){
+v2c.grid.plot = function(grid,z,x='x0.eih.A.pct',y='R0.A',fh='f.X.AvB',fv='f.mix.city'){
   .labs = list(
     opt.vax.x.A   = 'Optimal\nvaccine\nallocation',
     asso.city     = 'Fraction of contacts in same city',
     asso.city.pct = 'Contacts in same city (%)',
     x.A           = 'Fraction of overall population in city A',
     x.A.pct       = 'Overall population in city A (%)',
-    x0.ei.A       = 'Fraction of seed cases in city A',
-    x0.ei.A.pct   = 'Proportion of initial cases in city A (%)',
+    x0.eih.A      = 'Fraction of initial cases in city A',
+    x0.eih.A.pct  = 'Proportion of initial cases in city A (%)',
     R0.A          = 'Ro in city A (fixed 1.5 in city B)',
     R0.AvB        = 'Ratio of Ro in city A vs city B',
     dci.none      = 'Fewer\ninfections vs\nno vaccines',
@@ -159,20 +168,19 @@ v2c.grid.plot = function(grid,z,x='x0.ei.A.pct',y='R0.A',fh='f.X.AvB',fv='f.mix.
     c.vals = rev(.get.brewer(length(c.labs),'Spectral'))
   }
   if (grepl('^dci',z)){
-    c.breaks = c(seq(0,1000,100),1e6)
-    c.labs = c(seq(0,950,100),'1000+')
+    c.breaks = c(seq(0,200,20),1e6)
+    c.labs = c(seq(0,180,20),'200+')
     c.vals = .get.brewer(length(c.labs),'RdPu')
   }  
   if (grepl('^rdci',z)){
-    c.breaks = c(seq(0,60,5),100)
-    c.labs = c(seq(0,55,5),'60+')
-    c.vals = .get.brewer(length(c.labs),'PuBuGn')
+    c.breaks = c(seq(0,50,5),100)
+    c.labs = c(seq(0,45,5),'50+')
+    c.vals = .get.brewer(length(c.labs),'YlGnBu')
   }
   g = ggplot(grid,aes_string(x=x,y=y,z=z)) +
     geom_contour_filled(breaks=c.breaks,alpha=.8) +
     scale_fill_manual(values=c.vals,labels=c.labs,drop=FALSE) +
-    .facet.letters(grid,x,y,fh,fv,z=NULL) +
     facet_grid(paste(fv,' ~ ',fh)) +
     labs(x=.labs[[x]],y=.labs[[y]],fill=.labs[[z]])
-  .plot.clean(g)
+  .plot.clean(.facet.letters(g,par=z))
 }

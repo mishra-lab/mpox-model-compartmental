@@ -35,12 +35,19 @@ library('ggplot2')
     theme(strip.background=element_rect(fill='gray90'),strip.text = element_text(color='black'))
 }
 
-.facet.letters = function(data,x,y,fh,fv,pos=c(.1,.9),...){
-  data.lab = setNames(expand.grid(unique(data[[fh]]),unique(data[[fv]])),c(fh,fv))
-  data.lab$x = quantile(data[[x]],pos[1])
-  data.lab$y = quantile(data[[y]],pos[2])
-  data.lab$lab = letters[1:nrow(data.lab)]
-  return(geom_text(data=data.lab,aes(label=lab,x=x,y=y,...)))
+.facet.letters = function(g,pos=c(.1,.9),pars=character(),...){
+  # add letters to facets - TODO: stackoverflow
+  data = ggplot_build(g)$layout$layout
+  for (par in pars){ data[[par]] = NA }
+  data$lab = LETTERS[1:nrow(data)]
+  p.range = function(r,p){ r[1] + (r[2]-r[1])*p }
+  data = do.call(rbind,lapply(1:nrow(data),function(i){
+    ls = layer_scales(g,data[i,]$ROW,data[i,]$COL)
+    data.i = cbind(data[i,],
+      x = p.range(ls$x$range$range,pos[1]),
+      y = p.range(ls$y$range$range,pos[2]))
+  }))
+  g = g + geom_text(data=data,aes(label=lab,x=x,y=y),...)
 }
 
 plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
@@ -52,8 +59,8 @@ plot.out = function(out,x='t',y='value',ylabel,ci=.9,...){
       geom_ribbon(alpha=.2,color=NA)
   } else { # one model run -> one line
     out.aes = list(x=x,y=y,...)
-    g = ggplot(out,do.call(aes_string,out.aes)) +
-      geom_line()
+    g = ggplot(out) +
+      geom_line(do.call(aes_string,out.aes))
   }
   # clean-up, etc.
    g = g +
@@ -69,5 +76,7 @@ show.vax = function(P){
 
 plot.save = function(...,ext='.pdf',w=4,h=3){
   # save a plot to default directory
-  ggsave(paste0(root.path('out','fig','model',...,create=TRUE),ext),w=w,h=h)
+  fname = paste0(root.path('out','fig','model',...,create=TRUE),ext)
+  print(paste('plot.save:',fname))
+  ggsave(fname,w=w,h=h)
 }
